@@ -3,9 +3,9 @@ global-include *.yml
 global-include *.txt
 global-include *.html
 global-include VERSION
+global-include source.schema.json
 include LICENSE.md
 include Makefile
 include pylintrc
 include README.md
 include tox.ini
-
