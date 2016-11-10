@@ -63,7 +63,8 @@ class Generator(GeneratorBase):
                  }),
                 ('fiscal.upload',
                  {
-                     'in-file': '{}.fdp.zip'.format(pipeline_id)
+                     'in-file': '{}.fdp.zip'.format(pipeline_id),
+                     'publish': True
                  })
                 ]
         )
