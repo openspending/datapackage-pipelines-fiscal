@@ -32,7 +32,7 @@ class Generator(GeneratorBase):
                  {
                      'resource-name': pipeline_id,
                      'column-aliases': dict(
-                         (f['header'], f['aliases'])
+                         (f['header'], f.get('aliases', []))
                          for f in source['fields']
                      )
                  })] + [
