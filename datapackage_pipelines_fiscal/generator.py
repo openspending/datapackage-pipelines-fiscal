@@ -26,22 +26,39 @@ class Generator(GeneratorBase):
             if data_source['url'].endswith('.csv'):
                 data_source['mediatype'] = 'text/csv'
 
+        extra_measures = []
+        measure_handling = []
+        if 'measures' in source:
+            measure_handling = [
+                ('fiscal.normalise_measures',
+                 {'measures': source['measures']['mapping']})
+            ]
+            source['fields'].append({
+                'header': 'value',
+                'options': {
+                    'currency': source['measures']['currency']
+                },
+                'osType': 'value'
+            })
+            extra_measures = [(measure, []) for measure in source['measures']['mapping'].keys()]
+
         yield pipeline_id, schedule, steps(*[
                 ('simple_remote_source',
                  {
                      'resources': source['sources']
                  }),
-                'downloader',
+                ('downloader', {}, True),
                 ('concat',
                  {
                      'resource-name': resource_name,
-                     'column-aliases': dict(
+                     'column-aliases': dict([
                          (f['header'], f.get('aliases', []))
                          for f in source['fields']
-                     )
+                     ] + extra_measures)
                  })] + [
                 (step['processor'], step.get('parameters', {}))
-                for step in source.get('postprocessing', [])] + [
+                for step in source.get('postprocessing', [])] +
+                measure_handling + [
                 ('metadata',
                  {
                      'metadata': {
