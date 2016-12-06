@@ -8,6 +8,7 @@ params, datapackage, res_iter = ingest()
 
 os_types = params['os-types']
 options = params['options']
+titles = params.get('titles', {})
 
 resource = datapackage['resources'][0]
 fields = resource['schema']['fields']
@@ -18,6 +19,9 @@ for field in fields:
         logging.error('Missing OS Type for field %s', field_name)
     field['type'] = os_types[field_name]
     field['options'] = options.get(field_name, {})
+    if field_name in titles:
+        field['title'] = titles[field_name]
+
 
 result = subprocess.run(['/usr/bin/env', 'os-types', json.dumps(fields)],
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)

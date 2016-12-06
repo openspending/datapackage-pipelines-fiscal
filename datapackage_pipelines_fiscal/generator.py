@@ -16,7 +16,11 @@ class Generator(GeneratorBase):
     @classmethod
     def generate_pipeline(cls, source):
         schedule = SCHEDULE_DAILY
-        pipeline_id = slugify(source['title']).lower()
+        title = source['title']
+        dataset_name = source.get('dataset-name', title)
+        dataset_name = slugify(dataset_name).lower()
+        pipeline_id = dataset_name
+        resource_name = source.get('resource-name', dataset_name)
 
         for data_source in source['sources']:
             if data_source['url'].endswith('.csv'):
@@ -30,7 +34,7 @@ class Generator(GeneratorBase):
                 'downloader',
                 ('concat',
                  {
-                     'resource-name': pipeline_id,
+                     'resource-name': resource_name,
                      'column-aliases': dict(
                          (f['header'], f.get('aliases', []))
                          for f in source['fields']
@@ -41,8 +45,8 @@ class Generator(GeneratorBase):
                 ('metadata',
                  {
                      'metadata': {
-                         'title': source['title'],
-                         'name': pipeline_id
+                         'title': title,
+                         'name': dataset_name
                      }
                  }),
                 ('fiscal.model',
@@ -55,7 +59,12 @@ class Generator(GeneratorBase):
                      'os-types': dict(
                         (f['header'], f['osType'])
                         for f in source['fields']
-                     )
+                     ),
+                     'titles': dict(
+                        (f['header'], f['title'])
+                        for f in source['fields']
+                        if 'title' in f
+                     ),
                  }),
                 ('dump',
                  {
