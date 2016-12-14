@@ -22,7 +22,6 @@ for field in fields:
     if field_name in titles:
         field['title'] = titles[field_name]
 
-
 result = subprocess.run(['/usr/bin/env', 'os-types', json.dumps(fields)],
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 

@@ -29,18 +29,38 @@ class Generator(GeneratorBase):
         extra_measures = []
         measure_handling = []
         if 'measures' in source:
-            measure_handling = [
-                ('fiscal.normalise_measures',
-                 {'measures': source['measures']['mapping']})
-            ]
+            measures = source['measures']
+            measure_handling.append(('fiscal.normalise_measures',
+                                     {'measures': measures['mapping']}))
             source['fields'].append({
                 'header': 'value',
                 'options': {
-                    'currency': source['measures']['currency']
+                    'currency': measures['currency']
                 },
                 'osType': 'value'
             })
             extra_measures = [(measure, []) for measure in source['measures']['mapping'].keys()]
+            if 'currency-conversion' in measures:
+                currency_conversion = measures['currency-conversion']
+                date_measure = currency_conversion.get('date_measure')
+                if date_measure is None:
+                    date_measure = [f['header'] for f in source['fields'] if f.get('osType', '').startswith('date:')][0]
+                currencies = measures.get('currencies', ['USD'])
+                measure_handling.append(('fiscal.normalise_currencies',
+                                         {
+                                            'measures': ['value'],
+                                            'date-field': date_measure,
+                                            'to-currencies': currencies,
+                                            'from-currency': measures['currency']
+                                         }))
+                for currency in currencies:
+                    source['fields'].append({
+                        'header': 'value_{}'.format(currency),
+                        'options': {
+                            'currency': currency
+                        },
+                        'osType': 'value'
+                    })
 
         yield pipeline_id, schedule, steps(*[
                 ('simple_remote_source',
