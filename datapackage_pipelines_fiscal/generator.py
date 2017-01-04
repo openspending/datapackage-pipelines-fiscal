@@ -2,7 +2,7 @@ import os
 import json
 
 from datapackage_pipelines.generators import \
-    GeneratorBase, SCHEDULE_DAILY, slugify, steps
+    GeneratorBase, slugify, steps, SCHEDULE_MONTHLY
 
 SCHEMA_FILE = os.path.join(os.path.dirname(__file__), 'schema.json')
 
@@ -15,7 +15,7 @@ class Generator(GeneratorBase):
 
     @classmethod
     def generate_pipeline(cls, source):
-        schedule = SCHEDULE_DAILY
+        schedule = SCHEDULE_MONTHLY
         title = source['title']
         dataset_name = source.get('dataset-name', title)
         dataset_name = slugify(dataset_name).lower()
