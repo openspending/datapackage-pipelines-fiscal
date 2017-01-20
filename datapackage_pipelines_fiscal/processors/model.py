@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 import subprocess
@@ -17,13 +18,14 @@ for field in fields:
     field_name = field['name']
     if field_name not in os_types:
         logging.error('Missing OS Type for field %s', field_name)
-    field['type'] = os_types[field_name]
+    field['type'] = os_types[field_name ]
     field['options'] = options.get(field_name, {})
     if field_name in titles:
         field['title'] = titles[field_name]
 
 result = subprocess.run(['/usr/bin/env', 'os-types', json.dumps(fields)],
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                        env=os.environ.copy())
 
 errors = result.stderr.decode('utf8')
 if len(errors) > 0:
