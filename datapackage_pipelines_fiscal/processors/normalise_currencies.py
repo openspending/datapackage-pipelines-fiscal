@@ -30,23 +30,28 @@ for measure_name in measures_to_convert:
         })
 
 
-def convert(date, amount, fromcode, tocode):
-    params = dict(date=date, tocode=tocode, fromcode=fromcode)
-    key = KEY_TEMPLATE.format(**params)
-    if key in cache:
-        rate = cache[key]
-    else:
-        rate = requests.get(CURRENCY_API.format(**params))
-        if rate.status_code == 200:
-            logging.info('%s => %s', CURRENCY_API.format(**params), rate.text)
-            rate = Decimal(rate.text)
+def convert(dates, amount, fromcode, tocode):
+    rates = []
+    for date in dates:
+        params = dict(date=date, tocode=tocode, fromcode=fromcode)
+        key = KEY_TEMPLATE.format(**params)
+        if key in cache:
+            rate = cache[key]
         else:
-            rate = None
-        cache[key] = rate
-        params['rate'] = rate
-        logging.info('RATE {fromcode}->{tocode} @ {date:%Y-%m-%d} = {rate}'.format(**params))
+            rate = requests.get(CURRENCY_API.format(**params))
+            if rate.status_code == 200:
+                logging.info('%s => %s', CURRENCY_API.format(**params), rate.text)
+                rate = Decimal(rate.text)
+            else:
+                rate = None
+            cache[key] = rate
+            params['rate'] = rate
+            logging.info('RATE {fromcode}->{tocode} @ {date:%Y-%m-%d} = {rate}'.format(**params))
+        if rate is not None:
+            rates.append(rate)
 
-    if rate is not None:
+    if len(rates) > 0:
+        rate = sum(rates) / len(rates)
         return str((Decimal(amount)*rate).quantize(Decimal('.01'),
                                                    rounding=ROUND_DOWN))
 
@@ -58,15 +63,20 @@ def process_resources(_res_iter):
             if type(date) is str:
                 date = int(date)
             if type(date) is int:
-                date = datetime.date(year=date, month=1, day=1)
-            if date is not None:
+                dates = [datetime.date(year=date, month=month, day=15)
+                        for month in range(1, 13)]
+            if type(date) is not list:
+                dates = [date]
+            else:
+                dates = date
+            if dates is not None:
                 for measure_name in measures_to_convert:
                     for currency in to_currencies:
                         target_name = dst_measures[(measure_name, currency)]
                         amount = row[measure_name]
                         converted_amount = None
                         if amount is not None:
-                            converted_amount = convert(date,
+                            converted_amount = convert(dates,
                                                        amount,
                                                        from_currency,
                                                        currency)
