@@ -1,3 +1,4 @@
+import os
 import datetime
 import logging
 
@@ -7,14 +8,17 @@ from decimal import Decimal, ROUND_DOWN
 
 params, datapackage, res_iter = ingest()
 
-CURRENCY_API = 'http://currencies.apps.grandtrunk.net/getrate/{date:%Y-%m-%d}/{fromcode}/{tocode}'
-KEY_TEMPLATE = '{date:%Y-%m-%d}/{fromcode}/{tocode}'
+ACCESS_KEY = os.environ.get('CURRENCYLAYER_API_KEY', 'e97f996f7ae32e065a2061a4142824ca')
+CURRENCY_API = 'http://apilayer.net/api/historical?access_key={key}&' + \
+               'date={date:%Y-%m-%d}&currencies={code}&format=1&base=USD'
+KEY_TEMPLATE = '{date:%Y-%m-%d}/{code}'
 
 from_currency = params['from-currency']
 to_currencies = params['to-currencies']
 dst_measures = {}
 measures_to_convert = params['measures']
 date_column = params['date-field']
+title = params.get('title')
 cache = {}
 
 fields = datapackage['resources'][0]['schema']['fields']
@@ -23,61 +27,77 @@ for measure_name in measures_to_convert:
     for currency_code in to_currencies:
         target_name = '{}_{}'.format(measure['name'], currency_code)
         dst_measures[(measure_name, currency_code)] = target_name
+        astitle = title
+        if astitle is None:
+            astitle = measure.get('title', measure.get('name', 'value'))
         fields.append({
             'name': target_name,
-            'title': '{} ({})'.format(measure['name'], currency_code),
+            'title': '{} ({})'.format(astitle, currency_code),
             'type': 'number'
         })
 
 
-def convert(dates, amount, fromcode, tocode):
-    rates = []
-    for date in dates:
-        params = dict(date=date, tocode=tocode, fromcode=fromcode)
-        key = KEY_TEMPLATE.format(**params)
-        if key in cache:
-            rate = cache[key]
+def get_rate(date, code):
+    if code == 'USD':
+        return 1
+
+    params = dict(date=date, code=code, key=ACCESS_KEY)
+    key = KEY_TEMPLATE.format(**params)
+    if key in cache:
+        rate = cache[key]
+    else:
+        rate = requests.get(CURRENCY_API.format(date=date, code=code, key=ACCESS_KEY))
+        if rate.status_code == 200:
+            rate = rate.json()
+            rate = next(iter(rate.get('quotes', {}).values()))
+            logging.info('%s => %s', CURRENCY_API.format(**params), rate)
         else:
-            rate = requests.get(CURRENCY_API.format(**params))
-            if rate.status_code == 200:
-                logging.info('%s => %s', CURRENCY_API.format(**params), rate.text)
-                rate = Decimal(rate.text)
-            else:
-                rate = None
-            cache[key] = rate
-            params['rate'] = rate
-            logging.info('RATE {fromcode}->{tocode} @ {date:%Y-%m-%d} = {rate}'.format(**params))
-        if rate is not None:
+            rate = None
+        cache[key] = rate
+    return rate
+
+
+logged = set()
+def convert(date, amount, fromcode, tocode):
+    rates = []
+    if type(date) in {str, int}:
+        date = int(date)
+        dates = [datetime.date(year=date, month=month, day=15)
+                 for month in range(1, 13)]
+    else:
+        dates = [date]
+
+    for date_ in dates:
+        fromrate = get_rate(date_, fromcode)
+        torate = get_rate(date_, tocode)
+        if fromrate is not None and torate is not None:
+            rate = torate / fromrate
             rates.append(rate)
 
     if len(rates) > 0:
         rate = sum(rates) / len(rates)
-        return str((Decimal(amount)*rate).quantize(Decimal('.01'),
-                                                   rounding=ROUND_DOWN))
+
+        logged_key = '%s: %s=>%s' % (date, fromcode, tocode)
+        if logged_key not in logged:
+            logging.info('%r -> %s', logged_key, rate)
+            logged.add(logged_key)
+        return str(Decimal(amount*rate).quantize(Decimal('.01'),
+                                                 rounding=ROUND_DOWN))
 
 
 def process_resources(_res_iter):
     def process_rows(rows):
         for row in rows:
             date = row[date_column]
-            if type(date) is str:
-                date = int(date)
-            if type(date) is int:
-                dates = [datetime.date(year=date, month=month, day=15)
-                        for month in range(1, 13)]
-            if type(date) is not list:
-                dates = [date]
-            else:
-                dates = date
-            if dates is not None:
+            if date is not None:
                 for measure_name in measures_to_convert:
                     for currency in to_currencies:
                         target_name = dst_measures[(measure_name, currency)]
                         amount = row[measure_name]
                         converted_amount = None
                         if amount is not None:
-                            converted_amount = convert(dates,
-                                                       amount,
+                            converted_amount = convert(date,
+                                                       float(amount),
                                                        from_currency,
                                                        currency)
                         row[target_name] = converted_amount

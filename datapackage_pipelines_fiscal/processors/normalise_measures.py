@@ -5,6 +5,7 @@ from datapackage_pipelines.wrapper import ingest, spew
 params, datapackage, res_iter = ingest()
 
 measures = params['measures']
+title = params.get('title', 'value')
 all_keys = set.union(*[set(measure.keys()) for measure in measures.values()])
 
 
@@ -24,12 +25,16 @@ def amend_datapackage(_datapackage, _measures):
     fields = [f for f in fields if f['name'] not in _measures.keys()]
     fields.append({
         'name': 'value',
+        'title': title,
         'type': 'number'
     })
-    fields.extend({
-                      'name': key,
-                      'type': 'string'
-                  } for key in all_keys)
+    field_names = [f['name'] for f in fields]
+    for key in all_keys:
+        if key not in field_names:
+            fields.append({
+                              'name': key,
+                              'type': 'string'
+                          })
     _datapackage['resources'][0]['schema']['fields'] = fields
 
 
