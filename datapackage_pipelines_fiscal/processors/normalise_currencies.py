@@ -46,13 +46,13 @@ def get_rate(date, code):
     if key in cache:
         rate = cache[key]
     else:
-        rate = requests.get(CURRENCY_API.format(date=date, code=code, key=ACCESS_KEY))
-        if rate.status_code == 200:
-            rate = rate.json()
-            rate = next(iter(rate.get('quotes', {}).values()))
-            logging.info('%s => %s', CURRENCY_API.format(**params), rate)
-        else:
-            rate = None
+        rate = None
+        resp = requests.get(CURRENCY_API.format(date=date, code=code, key=ACCESS_KEY))
+        if resp.status_code == 200:
+            resp = resp.json()
+            if resp['success'] is True:
+                rate = next(iter(resp.get('quotes', {}).values()))
+                logging.info('%s => %s', CURRENCY_API.format(**params), rate)
         cache[key] = rate
     return rate
 
