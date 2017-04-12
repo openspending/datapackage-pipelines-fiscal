@@ -81,38 +81,42 @@ class Generator(GeneratorBase):
                         'currency': currency
                     }
 
-        yield pipeline_id, schedule, steps(*[
-                ('add_metadata',
-                 {
-                     'title': title,
-                     'name': dataset_name
-                 })] + [
-                ('add_resource', source)
-                for source in source['sources']
-                ] + [
-                ('stream_remote_resources', {}, True),
-                ('concatenate',
-                 {
-                     'target': {
-                         'name': resource_name
-                     },
-                     'fields': dict([
-                         (f['header'], f.get('aliases', []))
-                         for f in source['fields']
-                     ] + extra_measures)
-                 })] + [
-                (step['processor'], step.get('parameters', {}))
-                for step in source.get('postprocessing', [])] +
-                measure_handling + [
-                ('fiscal.model', model_params),
-                ('dump.to_zip',
-                 {
-                     'out-file': '{}.fdp.zip'.format(pipeline_id)
-                 }),
-                ('fiscal.upload',
-                 {
-                     'in-file': '{}.fdp.zip'.format(pipeline_id),
-                     'publish': True
-                 })
-                ]
-        )
+        pipeline_steps = steps(*[
+               ('add_metadata',
+                {
+                    'title': title,
+                    'name': dataset_name
+                })] + [
+               ('add_resource', source)
+               for source in source['sources']
+               ] + [
+               ('stream_remote_resources', {}, True),
+               ('concatenate',
+                {
+                    'target': {
+                        'name': resource_name
+                    },
+                    'fields': dict([
+                                       (f['header'], f.get('aliases', []))
+                                       for f in source['fields']
+                                       ] + extra_measures)
+                })] + [
+               (step['processor'], step.get('parameters', {}))
+               for step in source.get('postprocessing', [])] +
+           measure_handling + [
+               ('fiscal.model', model_params),
+               ('dump.to_zip',
+                {
+                    'out-file': '{}.fdp.zip'.format(pipeline_id)
+                }),
+               ('fiscal.upload',
+                {
+                    'in-file': '{}.fdp.zip'.format(pipeline_id),
+                    'publish': True
+                })
+           ]
+          )
+        pipeline_details = {
+            'pipeline': pipeline_steps
+        }
+        yield pipeline_id, pipeline_details
