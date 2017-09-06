@@ -25,10 +25,7 @@ INSTALL_REQUIRES = [
     'datapackage-pipelines',
     'os-gobble',
 ]
-LINT_REQUIRES = [
-    'pylint',
-]
-TESTS_REQUIRE = [
+TESTS_REQUIRES = [
     'tox',
 ]
 README = read('README.md')
@@ -42,8 +39,8 @@ setup(
     packages=PACKAGES,
     include_package_data=True,
     install_requires=INSTALL_REQUIRES,
-    tests_require=TESTS_REQUIRE,
-    extras_require={'develop': LINT_REQUIRES + TESTS_REQUIRE},
+    tests_require=TESTS_REQUIRES,
+    extras_require={'develop': TESTS_REQUIRES},
     zip_safe=False,
     long_description=README,
     description='{{ DESCRIPTION }}',

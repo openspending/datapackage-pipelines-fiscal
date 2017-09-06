@@ -22,6 +22,7 @@ def line_counter(_res_iter):
     for res in _res_iter:
         yield process_rows(res)
 
+
 spew(datapackage, line_counter(res_iter))
 
 user = gobble.user.User()

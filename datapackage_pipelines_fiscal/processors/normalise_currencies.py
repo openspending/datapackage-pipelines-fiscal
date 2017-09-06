@@ -8,7 +8,10 @@ from decimal import Decimal, ROUND_DOWN
 
 params, datapackage, res_iter = ingest()
 
-ACCESS_KEY = os.environ.get('CURRENCYLAYER_API_KEY', 'e97f996f7ae32e065a2061a4142824ca')
+ACCESS_KEY = os.environ.get(
+    'CURRENCYLAYER_API_KEY',
+    'e97f996f7ae32e065a2061a4142824ca'
+)
 CURRENCY_API = 'http://apilayer.net/api/historical?access_key={key}&' + \
                'date={date:%Y-%m-%d}&currencies={code}&format=1&base=USD'
 KEY_TEMPLATE = '{date:%Y-%m-%d}/{code}'
@@ -23,7 +26,7 @@ cache = {}
 
 fields = datapackage['resources'][0]['schema']['fields']
 for measure_name in measures_to_convert:
-    measure = next(filter(lambda f:f['name'] == measure_name, fields))
+    measure = next(filter(lambda f: f['name'] == measure_name, fields))
     for currency_code in to_currencies:
         target_name = '{}_{}'.format(measure['name'], currency_code)
         dst_measures[(measure_name, currency_code)] = target_name
@@ -47,7 +50,8 @@ def get_rate(date, code):
         rate = cache[key]
     else:
         rate = None
-        resp = requests.get(CURRENCY_API.format(date=date, code=code, key=ACCESS_KEY))
+        url = CURRENCY_API.format(date=date, code=code, key=ACCESS_KEY)
+        resp = requests.get(url)
         if resp.status_code == 200:
             resp = resp.json()
             if resp['success'] is True:
@@ -58,6 +62,8 @@ def get_rate(date, code):
 
 
 logged = set()
+
+
 def convert(date, amount, fromcode, tocode):
     rates = []
     if type(date) in {str, int}:

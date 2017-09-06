@@ -14,10 +14,18 @@ def validate_keys(_measures):
         measure_keys = set(measure.keys())
         missing_keys = all_keys - measure_keys
         if len(missing_keys) > 0:
-            raise RuntimeError('Missing keys for measure {}: {}'.format(measure_name, missing_keys))
+            msg = 'Missing keys for measure {}: {}'.format(
+                measure_name,
+                missing_keys
+            )
+            raise RuntimeError(msg)
         for value in measure.values():
             if type(value) is not str:
-                raise RuntimeError('Values measure {} should all be strings {}'.format(measure_name, value))
+                msg = 'Values measure {} should all be strings {}'.format(
+                    measure_name,
+                    value
+                )
+                raise RuntimeError(msg)
 
 
 def amend_datapackage(_datapackage, _measures):

@@ -18,7 +18,7 @@ for field in fields:
     field_name = field['name']
     if field_name not in os_types:
         logging.error('Missing OS Type for field %s', field_name)
-    field['type'] = os_types[field_name ]
+    field['type'] = os_types[field_name]
     field['options'] = options.get(field_name, {})
     if field_name in titles:
         field['title'] = titles[field_name]

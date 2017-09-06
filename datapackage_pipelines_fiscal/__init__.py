@@ -1,1 +1,1 @@
-from .generator import Generator
+from .generator import Generator  # noqa: W0611

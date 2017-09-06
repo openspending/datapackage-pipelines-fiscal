@@ -15,7 +15,6 @@ class Generator(GeneratorBase):
 
     @classmethod
     def generate_pipeline(cls, source):
-        schedule = SCHEDULE_MONTHLY
         title = source['title']
         dataset_name = source.get('dataset-name', title)
         dataset_name = slugify(dataset_name).lower()
@@ -26,7 +25,9 @@ class Generator(GeneratorBase):
             if data_source['url'].endswith('.csv'):
                 data_source['mediatype'] = 'text/csv'
             if 'name' not in data_source:
-                data_source['name'] = slugify(os.path.basename(data_source['url']))
+                data_source['name'] = slugify(
+                    os.path.basename(data_source['url'])
+                )
 
         model_params = {
             'options': dict(
@@ -57,12 +58,19 @@ class Generator(GeneratorBase):
             model_params['options']['value'] = {
                 'currency': measures['currency']
             }
-            extra_measures = [(measure, []) for measure in source['measures']['mapping'].keys()]
+            extra_measures = [
+                (measure, [])
+                for measure in source['measures']['mapping'].keys()
+            ]
             if 'currency-conversion' in measures:
                 currency_conversion = measures['currency-conversion']
                 date_measure = currency_conversion.get('date_measure')
                 if date_measure is None:
-                    date_measure = [f['header'] for f in source['fields'] if f.get('osType', '').startswith('date:')][0]
+                    date_measure = [
+                        f['header']
+                        for f in source['fields']
+                        if f.get('osType', '').startswith('date:')
+                    ][0]
                 currencies = measures.get('currencies', ['USD'])
                 normalise_currencies = ('fiscal.normalise_currencies',
                                         {
@@ -117,6 +125,9 @@ class Generator(GeneratorBase):
            ]
           )
         pipeline_details = {
-            'pipeline': pipeline_steps
+            'pipeline': pipeline_steps,
+            'schedule': {
+                'crontab': SCHEDULE_MONTHLY,
+            },
         }
         yield pipeline_id, pipeline_details
