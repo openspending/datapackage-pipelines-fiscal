@@ -49,8 +49,9 @@ class Generator(GeneratorBase):
         measure_handling = []
         if 'measures' in source:
             measures = source['measures']
-            normalise_measures = ('fiscal.normalise_measures',
-                                  {'measures': measures['mapping']})
+            normalise_measures = ('fiscal.normalise_measures', {
+                'measures': measures['mapping']
+            })
             if 'title' in measures:
                 normalise_measures[1]['title'] = measures['title']
             measure_handling.append(normalise_measures)
@@ -72,13 +73,12 @@ class Generator(GeneratorBase):
                         if f.get('osType', '').startswith('date:')
                     ][0]
                 currencies = measures.get('currencies', ['USD'])
-                normalise_currencies = ('fiscal.normalise_currencies',
-                                        {
-                                          'measures': ['value'],
-                                          'date-field': date_measure,
-                                          'to-currencies': currencies,
-                                          'from-currency': measures['currency']
-                                        })
+                normalise_currencies = ('fiscal.normalise_currencies', {
+                    'measures': ['value'],
+                    'date-field': date_measure,
+                    'to-currencies': currencies,
+                    'from-currency': measures['currency']
+                })
                 if 'title' in currency_conversion:
                     normalise_currencies[1]['title'] = measures['title']
                 measure_handling.append(normalise_currencies)
@@ -89,43 +89,46 @@ class Generator(GeneratorBase):
                         'currency': currency
                     }
 
-        pipeline_steps = steps(*[
-               ('add_metadata',
+        pipeline_steps = [
+            (
+                'add_metadata',
                 {
-                    'title': title,
-                    'name': dataset_name
-                })] + [
-               ('add_resource', source)
-               for source in source['sources']
-               ] + [
-               ('stream_remote_resources', {}, True),
-               ('concatenate',
-                {
-                    'target': {
-                        'name': resource_name
-                    },
-                    'fields': dict([
-                                       (f['header'], f.get('aliases', []))
-                                       for f in source['fields']
-                                       ] + extra_measures)
-                })] + [
-               (step['processor'], step.get('parameters', {}))
-               for step in source.get('postprocessing', [])] +
-           measure_handling + [
-               ('fiscal.model', model_params),
-               ('dump.to_zip',
-                {
-                    'out-file': '{}.fdp.zip'.format(pipeline_id)
-                }),
-               ('fiscal.upload',
-                {
-                    'in-file': '{}.fdp.zip'.format(pipeline_id),
-                    'publish': True
-                })
-           ]
-          )
+                   'title': title,
+                   'name': dataset_name,
+                }
+            )
+        ] + [
+            ('add_resource', source)
+            for source in source['sources']
+        ] + [
+            ('stream_remote_resources', {}, True),
+            ('concatenate', {
+                'target': {
+                    'name': resource_name
+                },
+                'fields': dict(
+                    [
+                        (f['header'], f.get('aliases', []))
+                        for f in source['fields']
+                    ] + extra_measures
+                )
+            }),
+        ] + [
+            (step['processor'], step.get('parameters', {}))
+            for step in source.get('postprocessing', [])
+        ] + measure_handling + [
+            ('fiscal.model', model_params),
+            ('dump.to_zip', {
+                'out-file': '{}.fdp.zip'.format(pipeline_id)
+            }),
+            ('fiscal.upload', {
+                'in-file': '{}.fdp.zip'.format(pipeline_id),
+                'publish': True
+            })
+        ]
+
         pipeline_details = {
-            'pipeline': pipeline_steps,
+            'pipeline': steps(*pipeline_steps),
             'schedule': {
                 'crontab': SCHEDULE_MONTHLY,
             },
