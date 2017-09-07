@@ -2,7 +2,7 @@ import os
 import json
 
 from datapackage_pipelines.generators import \
-    GeneratorBase, slugify, steps, SCHEDULE_MONTHLY
+    GeneratorBase, slugify, steps
 
 SCHEMA_FILE = os.path.join(os.path.dirname(__file__), 'schema.json')
 
@@ -129,8 +129,5 @@ class Generator(GeneratorBase):
 
         pipeline_details = {
             'pipeline': steps(*pipeline_steps),
-            'schedule': {
-                'crontab': SCHEDULE_MONTHLY,
-            },
         }
         yield pipeline_id, pipeline_details
