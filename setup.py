@@ -23,6 +23,7 @@ NAME = PACKAGE.replace('_', '-')
 INSTALL_REQUIRES = [
     'six>=1.9',
     'datapackage-pipelines',
+    'datapackage>=1.0.2',
     'os-gobble',
 ]
 TESTS_REQUIRES = [

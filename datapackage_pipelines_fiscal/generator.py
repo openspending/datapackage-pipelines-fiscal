@@ -89,6 +89,7 @@ class Generator(GeneratorBase):
                         'currency': currency
                     }
 
+        outputFile = '{}.fdp.zip'.format(pipeline_id)
         pipeline_steps = [
             (
                 'add_metadata',
@@ -119,10 +120,14 @@ class Generator(GeneratorBase):
         ] + measure_handling + [
             ('fiscal.model', model_params),
             ('dump.to_zip', {
-                'out-file': '{}.fdp.zip'.format(pipeline_id)
+                'out-file': outputFile,
+            }),
+            ('fiscal.split_resource_per_fiscal_year_and_dump_to_zip', {
+                'in-file': outputFile,
+                'out-file': outputFile,
             }),
             ('fiscal.upload', {
-                'in-file': '{}.fdp.zip'.format(pipeline_id),
+                'in-file': outputFile,
                 'publish': True
             })
         ]
