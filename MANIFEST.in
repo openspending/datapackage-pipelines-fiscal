@@ -1,10 +1,4 @@
-global-include *.json
-global-include *.yml
-global-include *.txt
-global-include *.html
-global-include VERSION
-global-include source.schema.json
+recursive-include datapackage_pipelines_fiscal *.json *.yml *.txt *.html VERSION
 include LICENSE.md
 include Makefile
 include README.md
-include tox.ini
