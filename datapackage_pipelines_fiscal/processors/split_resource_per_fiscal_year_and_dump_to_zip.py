@@ -1,8 +1,8 @@
 import copy
 import logging
 import csv
-import os
 import tempfile
+import unittest.mock as mock
 from datapackage import DataPackage as Package
 from datapackage_pipelines.wrapper import ingest, spew
 
@@ -18,11 +18,7 @@ def run(parameters):
 
 
 def split_resource_per_year(in_file, out_file):
-    # Need to set the base path here because a resource can't
-    # have an absolute path. If they do, `datapackage-py` raises
-    # a not safe exception.
-    base_path = tempfile.gettempdir()
-    dp = Package(in_file, base_path=base_path)
+    dp = Package(in_file)
 
     if not _is_valid(dp):
         logging.warn(
@@ -47,10 +43,7 @@ def split_resource_per_year(in_file, out_file):
                 descriptor = copy.deepcopy(default_resource_descriptor)
                 descriptor.update({
                     'name': str(year),
-                    'path': os.path.relpath(
-                        resource_data['fp'].name,
-                        base_path
-                    ),
+                    'path': resource_data['fp'].name,
                     'count_of_rows': resource_data['count_of_rows'],
                     'profile': 'tabular-data-resource',
                 })
@@ -62,8 +55,12 @@ def split_resource_per_year(in_file, out_file):
                     resource_data['count_of_rows']
                 )
 
-    dp.commit()
-    dp.save(out_file)
+    # FIXME: Remove this whenever we're able to create and safe datapackages
+    # without safe resources.
+    # See https://github.com/frictionlessdata/datapackage-py/issues/171
+    with mock.patch('datapackage.helpers.is_safe_path', return_value=True):
+        dp.commit()
+        dp.save(out_file)
 
     return dp
 
