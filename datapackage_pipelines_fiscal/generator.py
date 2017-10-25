@@ -89,7 +89,7 @@ class Generator(GeneratorBase):
                         'currency': currency
                     }
 
-        outputFile = '{}.fdp.zip'.format(pipeline_id)
+        output_file = '{}.fdp.zip'.format(pipeline_id)
         pipeline_steps = [
             (
                 'add_metadata',
@@ -120,19 +120,67 @@ class Generator(GeneratorBase):
         ] + measure_handling + [
             ('fiscal.model', model_params),
             ('dump.to_zip', {
-                'out-file': outputFile,
+                'out-file': output_file,
             }),
-            ('fiscal.split_resource_per_fiscal_year_and_dump_to_zip', {
-                'in-file': outputFile,
-                'out-file': outputFile,
-            }),
-            ('fiscal.upload', {
-                'in-file': outputFile,
-                'publish': True
-            })
         ]
 
         pipeline_details = {
             'pipeline': steps(*pipeline_steps),
         }
         yield pipeline_id, pipeline_details
+
+        (
+            split_fiscal_year_pipeline_id,
+            split_fiscal_year_pipeline_details,
+            split_fiscal_year_output_file,
+        ) = cls._generate_split_fiscal_year_pipeline(
+            pipeline_id,
+            output_file
+        )
+        yield split_fiscal_year_pipeline_id, split_fiscal_year_pipeline_details
+
+        yield cls._generate_upload_pipeline(
+            split_fiscal_year_pipeline_id,
+            split_fiscal_year_output_file
+        )
+
+    @classmethod
+    def _generate_split_fiscal_year_pipeline(cls, prev_pipeline_id, in_file):
+        pipeline_id = prev_pipeline_id + '_split_per_fiscal_year'
+        output_file = '{}.fdp.zip'.format(pipeline_id)
+        pipeline_steps = [
+            ('fiscal.split_resource_per_fiscal_year_and_dump_to_zip', {
+                'in-file': in_file,
+                'out-file': output_file,
+            }),
+        ]
+        pipeline_details = {
+            'pipeline': steps(*pipeline_steps),
+            'dependencies': [
+                {
+                    'pipeline': prev_pipeline_id,
+                },
+            ],
+        }
+
+        return pipeline_id, pipeline_details, output_file
+
+    @classmethod
+    def _generate_upload_pipeline(cls, prev_pipeline_id, in_file):
+        pipeline_id = prev_pipeline_id + '_upload'
+        pipeline_steps = [
+            ('fiscal.upload', {
+                'in-file': in_file,
+                'publish': False
+            }),
+        ]
+        pipeline_details = {
+            'pipeline': steps(*pipeline_steps),
+            'dependencies': [
+                {
+                    'pipeline': prev_pipeline_id,
+                },
+            ],
+        }
+
+        return pipeline_id, pipeline_details

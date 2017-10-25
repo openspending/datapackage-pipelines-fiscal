@@ -50,7 +50,7 @@ def split_resource_per_year(in_file, out_file):
                 dp.descriptor['resources'].append(descriptor)
 
                 logging.info(
-                    'Created resource for year %d (%d rows)',
+                    'Created resource for year %s (%d rows)',
                     year,
                     resource_data['count_of_rows']
                 )
@@ -83,14 +83,14 @@ def _split_rows_per_year(resource):
         return
 
     resources_per_year = {}
-    for row in resource.iter(keyed=True):
+    for row in resource.iter(keyed=True, cast=False):
         fiscal_year = row.get(fiscal_year_field['name'])
         if not fiscal_year:
             continue
 
         if fiscal_year not in resources_per_year:
             fp = tempfile.NamedTemporaryFile(mode='w', encoding='utf-8')
-            fieldnames = sorted(row.keys())
+            fieldnames = row.keys()
             writer = csv.DictWriter(fp, fieldnames=fieldnames)
             writer.writeheader()
 
