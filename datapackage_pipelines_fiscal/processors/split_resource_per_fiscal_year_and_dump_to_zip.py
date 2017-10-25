@@ -90,7 +90,7 @@ def _split_rows_per_year(resource):
 
         if fiscal_year not in resources_per_year:
             fp = tempfile.NamedTemporaryFile(mode='w', encoding='utf-8')
-            fieldnames = sorted(row.keys())
+            fieldnames = row.keys()
             writer = csv.DictWriter(fp, fieldnames=fieldnames)
             writer.writeheader()
 
