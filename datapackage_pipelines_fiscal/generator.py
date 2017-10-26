@@ -171,7 +171,7 @@ class Generator(GeneratorBase):
         pipeline_steps = [
             ('fiscal.upload', {
                 'in-file': in_file,
-                'publish': False
+                'publish': True
             }),
         ]
         pipeline_details = {
