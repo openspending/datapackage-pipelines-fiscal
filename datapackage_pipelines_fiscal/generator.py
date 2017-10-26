@@ -119,7 +119,7 @@ class Generator(GeneratorBase):
             (step['processor'], step.get('parameters', {}))
             for step in source.get('postprocessing', [])
         ] + measure_handling + [
-            ('fiscal.model', model_params, True),
+            ('fiscal.model', model_params),
             ('dump.to_zip', {
                 'out-file': partial_output_file,
             }),
