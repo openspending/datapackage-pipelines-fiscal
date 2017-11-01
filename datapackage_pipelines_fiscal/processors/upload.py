@@ -4,7 +4,6 @@ import zipfile
 import tempfile
 
 from datapackage_pipelines.wrapper import ingest, spew
-import datapackage_pipelines_fiscal.helpers as helpers
 
 import gobble
 
@@ -42,12 +41,4 @@ def run():
     package.upload(skip_validation=True, publish=publish)
 
 
-# Wrap iterator using helpers.run_after_yielding_elements() so we
-# guarantee that this processor is run after every processor before
-# it has finished, but will block subsequent processors that use this
-# wrapper from running until it's finished.
-iterator = helpers.run_after_yielding_elements(
-    line_counter(res_iter),
-    lambda: run()
-)
-spew(datapackage, iterator)
+spew(datapackage, line_counter(res_iter), finalizer=run)

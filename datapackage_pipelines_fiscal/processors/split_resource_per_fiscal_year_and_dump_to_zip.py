@@ -5,7 +5,6 @@ import tempfile
 import unittest.mock as mock
 from datapackage import DataPackage as Package
 from datapackage_pipelines.wrapper import ingest, spew
-import datapackage_pipelines_fiscal.helpers as helpers
 
 
 def run(parameters):
@@ -160,13 +159,8 @@ def _clean_resource_descriptor(resource):
 if __name__ == '__main__':
     parameters, datapackage, resource_iterator = ingest()
 
-    # Wrap iterator using helpers.run_after_yielding_elements() so we
-    # guarantee that this processor is run after every processor before
-    # it has finished, but will block subsequent processors that use this
-    # wrapper from running until it's finished.
-    iterator = helpers.run_after_yielding_elements(
+    spew(
+        datapackage,
         resource_iterator,
-        lambda: run(parameters)
+        finalizer=lambda: run(parameters)
     )
-
-    spew(datapackage, iterator)

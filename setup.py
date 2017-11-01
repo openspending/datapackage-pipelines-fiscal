@@ -22,7 +22,7 @@ PACKAGE = 'datapackage_pipelines_fiscal'
 NAME = PACKAGE.replace('_', '-')
 INSTALL_REQUIRES = [
     'six>=1.9',
-    'datapackage-pipelines>=1.3.2',
+    'datapackage-pipelines>=1.5.0',
     'datapackage>=1.0.2',
     'os-gobble',
 ]
