@@ -38,6 +38,25 @@ class TestSplitResourcePerFiscalYearAndDumpToZip(object):
             assert year_resource.descriptor['schema'] == main_resource['schema']
             assert year_resource.read(keyed=True) == expected_data
 
+    def test_resource_per_fiscal_year_are_sorted_desc(self, parameters, dp_descriptor):
+        dp_descriptor['resources'][0].update({
+            'data': [
+                {'fiscalYear': 2017, 'value': 0},
+                {'fiscalYear': 2016, 'value': 10},
+                {'fiscalYear': 2018, 'value': 5},
+                {'fiscalYear': 2015, 'value': 21},
+                {'fiscalYear': 2019, 'value': 50},
+            ],
+        })
+
+        parameters['in-file'] = dp_descriptor
+        processor.run(parameters)
+
+        dp = Package(parameters['out-file'])
+        year_resource_names = [res.descriptor['name'] for res in dp.resources[1:]]
+
+        assert year_resource_names == sorted(year_resource_names, reverse=True)
+
     def test_dont_create_extra_resources_if_theres_only_one_fiscal_year(self, parameters, dp_descriptor):
         dp_descriptor['resources'][0].update({
             'data': [

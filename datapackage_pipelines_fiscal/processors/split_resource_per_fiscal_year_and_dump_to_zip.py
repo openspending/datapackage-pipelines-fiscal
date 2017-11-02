@@ -36,7 +36,7 @@ def split_resource_per_year(in_file, out_file):
         else:
             default_resource_descriptor = _clean_resource_descriptor(resource)
 
-            for year, resource_data in resources_per_year.items():
+            for year, resource_data in sorted(resources_per_year.items(), reverse=True):  # noqa: E501
                 # Make sure all rows are written to the filesystem
                 resource_data['fp'].flush()
 
