@@ -101,7 +101,8 @@ class Generator(GeneratorBase):
                             f['header']
                             for f in source['fields']
                             if f['osType'] != 'value'
-                        ]
+                        ],
+                        'delete': True
                     },
                     'target': {
                         'name': resource_name,
