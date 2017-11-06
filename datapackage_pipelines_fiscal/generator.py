@@ -145,7 +145,7 @@ class Generator(GeneratorBase):
                     ] + extra_measures
                 )
             }),
-        ] + [
+        ] + dedpulicate_steps + [
             (step['processor'], step.get('parameters', {}))
             for step in source.get('postprocessing', [])
         ] + measure_handling + [
