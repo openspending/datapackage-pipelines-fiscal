@@ -89,6 +89,36 @@ class Generator(GeneratorBase):
                         'currency': currency
                     }
 
+        dedpulicate_lines = source.get('deduplicate') is True
+        dedpulicate_steps = []
+        if dedpulicate_lines:
+            dedpulicate_steps.append((
+                'join',
+                {
+                    'source': {
+                        'name': resource_name,
+                        'key': [
+                            f['header']
+                            for f in source['fields']
+                            if f['osType'] != 'value'
+                        ]
+                    },
+                    'target': {
+                        'name': resource_name,
+                        'key': None
+                    },
+                    'fields': dict(
+                        (f['header'],
+                         {
+                             'name': f['header'],
+                             'aggregate': 'any' if f['osType'] != 'value' else 'sum'
+                         })
+                        for f in source['fields']
+                    )
+                }
+            ))
+
+
         partial_output_file = '{}.fdp.partial.zip'.format(pipeline_id)
         output_file = '{}.fdp.zip'.format(pipeline_id)
         pipeline_steps = [
