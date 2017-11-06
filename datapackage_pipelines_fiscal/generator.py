@@ -93,6 +93,21 @@ class Generator(GeneratorBase):
         dedpulicate_steps = []
         if dedpulicate_lines:
             dedpulicate_steps.append((
+                'set_types',
+                {
+                    'types': dict(
+                        (f['header'],
+                         dict(
+                            type='number',
+                            **f.get('options', {})
+                         )
+                        )
+                        for f in source['fields']
+                        if f['osType'] == 'value'
+                    )
+                }
+            ))
+            dedpulicate_steps.append((
                 'join',
                 {
                     'source': {
