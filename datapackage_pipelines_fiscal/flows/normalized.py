@@ -4,7 +4,7 @@ from .utils import extract_names, extract_storage_ids
 def normalized_flow(source):
 
     _, _, resource_name = extract_names(source)
-    dataset_id, db_table = extract_storage_ids(source)
+    dataset_id, db_table, _ = extract_storage_ids(source)
 
     kinds = sorted(set(
         f['osType'].split(':')[0]

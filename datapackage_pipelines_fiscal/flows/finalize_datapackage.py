@@ -10,7 +10,7 @@ logging.info('DUMPING results to BUCKET %s', BUCKET)
 def finalize_datapackage_flow(source):
 
     _, _, resource_name = extract_names(source)
-    dataset_id, _ = extract_storage_ids(source)
+    _, _, dataset_path = extract_storage_ids(source)
 
     pipeline_steps = [
                          (
@@ -36,12 +36,13 @@ def finalize_datapackage_flow(source):
                 'aws.dump.to_s3',
                 {
                     'bucket': BUCKET,
-                    'path': '{}/final'.format(dataset_id)
+                    'path': '{}/final'.format(dataset_path),
+                    'pretty-descriptor': True
                 }
             ),
             ('fiscal.update_model_in_registry', {
                 'dataset-id': dataset_id,
-                'datapackage-url': 'https://{}/{}/final/datapackage.json'.format(BUCKET, dataset_id)
+                'datapackage-url': 'https://{}/{}/final/datapackage.json'.format(BUCKET, dataset_path)
             }),
         ])
     else:

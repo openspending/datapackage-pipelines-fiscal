@@ -8,7 +8,9 @@ from datapackage_pipelines.generators import slugify
 def denormalized_flow(source):
 
     title, dataset_name, resource_name = extract_names(source)
-    dataset_id, _ = extract_storage_ids(source)
+    dataset_id, _, _ = extract_storage_ids(source)
+
+    original_datapackage_url = source.get('datapackage-url')
 
     for data_source in source['sources']:
         if data_source['url'].endswith('.csv'):
@@ -124,7 +126,15 @@ def denormalized_flow(source):
             }
         ))
 
-    pipeline_steps = [
+    load_metadata_steps = []
+    if original_datapackage_url:
+        load_metadata_steps.append((
+            'load_metadata', {
+                'url': original_datapackage_url
+            }
+        ))
+
+    pipeline_steps = original_datapackage_url + [
                          (
                              'add_metadata',
                              {
