@@ -13,7 +13,7 @@ def extract_storage_ids(source):
     owner_id = source['owner-id']
     _, dataset_name, _ = extract_names(source)
     dataset_id = '{}:{}'.format(owner_id, dataset_name)
-    dataset_id = '{}/{}'.format(owner_id, dataset_name)
+    dataset_path = '{}/{}'.format(owner_id, dataset_name)
     dataset_name_hash = md5(dataset_name.encode('ascii')).hexdigest()[:16]
     db_table = '{}{}'.format(owner_id, dataset_name_hash)
     return dataset_id, db_table, dataset_path

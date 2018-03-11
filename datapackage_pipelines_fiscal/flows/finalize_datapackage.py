@@ -10,7 +10,7 @@ logging.info('DUMPING results to BUCKET %s', BUCKET)
 def finalize_datapackage_flow(source):
 
     _, _, resource_name = extract_names(source)
-    _, _, dataset_path = extract_storage_ids(source)
+    dataset_id, _, dataset_path = extract_storage_ids(source)
 
     pipeline_steps = [
                          (
