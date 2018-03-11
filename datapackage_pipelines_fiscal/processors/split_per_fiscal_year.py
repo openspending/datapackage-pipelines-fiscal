@@ -56,7 +56,9 @@ if __name__ == '__main__':
             descriptor['name'] = '{}__{}'.format(name_prefix, year)
             descriptor['path'] = 'data/{}__{}.csv'.format(name_prefix, year)
             datapackage['resources'].append(descriptor)
-            out_file = open(os.path.join('final', descriptor['path']), 'w')
+            out_filename = os.path.join('final', descriptor['path'])
+            os.makedirs(os.path.dirname(out_filename), exist_ok=True)
+            out_file = open(out_filename, 'w')
             router[year] = CSVFormat().initialize_file(out_file, headers)
         
         spew(datapackage, process_resources(res_iter, fields, router))

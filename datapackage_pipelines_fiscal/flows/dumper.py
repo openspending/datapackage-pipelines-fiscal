@@ -57,3 +57,10 @@ def dumper_flow(source):
         })
     ]
     yield steps, ['./normalized_flow'], ''
+
+    yield [
+        ('fiscal.update_model_in_registry', {
+            'dataset-id': dataset_id,
+            'loaded': True
+        }),
+    ], ['./dumper_flow'], 'update_status'

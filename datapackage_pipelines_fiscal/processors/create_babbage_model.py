@@ -5,7 +5,7 @@ from datapackage_pipelines.generators import slugify
 def modify_datapackage(dp, parameters, *_):
     db_tables = parameters['db-tables']
     model = dp['model']
-    field_types = dict((x['name'], x['type']) for x in dp['resources'][-1]['schema']['fields'])
+    field_types = dict((x['slug'], x['type']) for x in dp['resources'][-1]['schema']['fields'])
 
     bbg_hierarchies = {}
     bbg_dimensions = {}

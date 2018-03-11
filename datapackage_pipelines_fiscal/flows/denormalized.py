@@ -1,6 +1,6 @@
 import os
 
-from .utils import extract_names
+from .utils import extract_names, extract_storage_ids
 
 from datapackage_pipelines.generators import slugify
 
@@ -8,6 +8,7 @@ from datapackage_pipelines.generators import slugify
 def denormalized_flow(source):
 
     title, dataset_name, resource_name = extract_names(source)
+    dataset_id, _ = extract_storage_ids(source)
 
     for data_source in source['sources']:
         if data_source['url'].endswith('.csv'):
@@ -130,7 +131,11 @@ def denormalized_flow(source):
                                  'title': title,
                                  'name': dataset_name,
                              }
-                         )
+                         ),
+                         ('fiscal.update_model_in_registry', {
+                             'dataset-id': dataset_id,
+                             'loaded': False
+                         }),
                      ] + [
                          ('add_resource', source)
                          for source in source['sources']

@@ -82,6 +82,7 @@ def normalized_flow(source):
         ('fiscal.helpers.load_primarykey', {}, True),
         ('fiscal.update_model_in_registry', {
             'dataset-id': dataset_id,
+            'loaded': False
         }),
         ('dump.to_path', {
             'out-path': 'normalized/final'
