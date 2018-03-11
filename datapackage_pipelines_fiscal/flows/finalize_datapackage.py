@@ -1,8 +1,11 @@
 import os
+import logging
 
 from .utils import extract_names, extract_storage_ids
 
 BUCKET = os.environ.get('S3_BUCKET_NAME')
+logging.info('DUMPING results to BUCKET %s', BUCKET)
+
 
 def finalize_datapackage_flow(source):
 
