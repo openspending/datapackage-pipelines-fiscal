@@ -134,7 +134,7 @@ def denormalized_flow(source):
             }
         ))
 
-    pipeline_steps = original_datapackage_url + [
+    pipeline_steps = load_metadata_steps + [
                          (
                              'add_metadata',
                              {
