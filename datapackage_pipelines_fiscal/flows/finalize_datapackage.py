@@ -31,7 +31,7 @@ def finalize_datapackage_flow(source):
                          ),
                      ]
     if BUCKET is not None:
-        pipeline_steps.append(
+        pipeline_steps.extend([
             (
                 'aws.dump.to_s3',
                 {
@@ -43,7 +43,7 @@ def finalize_datapackage_flow(source):
                 'dataset-id': dataset_id,
                 'datapackage-url': 'https://{}/{}/final/datapackage.json'.format(BUCKET, dataset_id)
             }),
-        )
+        ])
     else:
         pipeline_steps.append(
             (
