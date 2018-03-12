@@ -29,7 +29,32 @@ def finalize_datapackage_flow(source):
                          (
                              'fiscal.split_per_fiscal_year'
                          ),
+                         (
+                             'dump.to_path',
+                             {
+                                 'out-path': 'final'
+                             }
+                         )
                      ]
+
+    yield pipeline_steps, ['./denormalized_flow'], 'splitter'
+
+    pipeline_steps = [
+                        (
+                            'load_metadata',
+                            {
+                                'url': 'dependency://./finalize_datapackage_flow_splitter',
+                            }
+                        ),
+                        (
+                            'load_resource',
+                            {
+                                'url': 'dependency://./finalize_datapackage_flow_splitter',
+                                'resource': '.+'
+                            }
+                        )
+                    ]
+
     if BUCKET is not None:
         pipeline_steps.extend([
             (
@@ -40,20 +65,23 @@ def finalize_datapackage_flow(source):
                     'pretty-descriptor': True
                 }
             ),
+        ])
+    else:
+        pipeline_steps.extend([
+            (
+                'dump.to_zip',
+                {
+                    'out-file': '{}_final.zip'.format(dataset_id),
+                    'pretty-descriptor': True
+                }
+            ),
+        ])
+
+    pipeline_steps.extend([
             ('fiscal.update_model_in_registry', {
                 'dataset-id': dataset_id,
                 'datapackage-url': 'https://{}/{}/final/datapackage.json'.format(BUCKET, dataset_path)
             }),
         ])
-    else:
-        pipeline_steps.append(
-            (
-                'dump.to_path',
-                {
-                    'out-path': 'final'
-                }
-            )
-        )
-        
 
-    yield pipeline_steps, ['./denormalized_flow'], ''
+    yield pipeline_steps, ['./finalize_datapackage_flow_splitter'], ''
