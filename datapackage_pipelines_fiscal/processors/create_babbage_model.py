@@ -1,6 +1,7 @@
 from datapackage_pipelines.wrapper import process
 from datapackage_pipelines.generators import slugify
 
+from datapackage_pipelines_fiscal.processors.consts import ID_COLUMN_NAME
 
 def modify_datapackage(dp, parameters, *_):
     db_tables = parameters['db-tables']
@@ -46,7 +47,7 @@ def modify_datapackage(dp, parameters, *_):
                 attributes=bbg_attributes,
                 key_attribute=fieldname,
                 label=attribute.get('title'),
-                join_column=[hierarchy_name+'_id', 'id']
+                join_column=[hierarchy_name+'_id', ID_COLUMN_NAME]
             )
 
             label = labels.get(fieldname)

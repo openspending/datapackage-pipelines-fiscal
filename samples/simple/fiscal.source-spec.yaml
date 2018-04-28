@@ -5,6 +5,9 @@ sources:
 - url: simple.csv
 
 fields:
+- header: id
+  osType: budget-line-id
+
 - header: year
   osType: date:fiscal-year
 

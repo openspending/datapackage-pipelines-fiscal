@@ -1,5 +1,7 @@
 from datapackage_pipelines.generators import slugify
+
 from .utils import extract_names, extract_storage_ids
+from datapackage_pipelines_fiscal.processors.consts import ID_COLUMN_NAME
 
 def normalized_flow(source):
 
@@ -66,7 +68,7 @@ def normalized_flow(source):
                 },
                 'fields': {
                     resource + '_id': {
-                        'name': 'id'
+                        'name': ID_COLUMN_NAME
                     }
                 }
             }),
