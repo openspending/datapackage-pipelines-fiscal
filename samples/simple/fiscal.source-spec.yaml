@@ -1,0 +1,14 @@
+title: A Very Simple Dataset
+owner-id: 667df60aa07c34260eae9b55b2778712
+
+sources:
+- url: simple.csv
+
+fields:
+- header: year
+  osType: date:fiscal-year
+
+- header: amount
+  options:
+    groupChar: ","
+  osType: value

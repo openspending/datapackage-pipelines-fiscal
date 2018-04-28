@@ -168,6 +168,7 @@ def denormalized_flow(source):
                      ] + measure_handling + [
                          ('fiscal.model', model_params),
                          ('fiscal.collect-fiscal-years', ),
+                         ('set_types',),
                          ('dump.to_path', {
                              'out-path': 'denormalized',
                          }),
