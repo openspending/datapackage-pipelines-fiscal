@@ -14,8 +14,9 @@ def split_to_years(res, fields, router):
     csv_format = CSVFormat()
     for row in res:
         val = row[fiscal_year_field]
-        writer = router[val]
-        csv_format.write_row(writer, row, fields)
+        writer = router.get(val)
+        if writer is not None:
+          csv_format.write_row(writer, row, fields)
         yield row
     for writer in router.values():
         csv_format.finalize_file(writer)
