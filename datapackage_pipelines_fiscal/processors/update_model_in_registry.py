@@ -13,17 +13,15 @@ def modify_datapackage(dp, parameters, *_):
     datapackage_url = parameters.get('datapackage-url')
     if ES_ADDRESS:
         registry = PackageRegistry(ES_ADDRESS)
+        datapackage = copy.deepcopy(dp)
         params = {}
-        if 'babbageModel' in dp:
-            model = dp['babbageModel']
-            datapackage = copy.deepcopy(dp)
+        if 'babbageModel' in datapackage:
+            model = datapackage['babbageModel']
             del datapackage['babbageModel']
-            params.update(dict(
-                model=model,
-                datapackage=datapackage
-            ))
+            params['model'] = model
         if datapackage_url:
             params['datapackage_url'] = datapackage_url
+            params['datapackage'] = datapackage
         if loaded is not None:
             params['loaded'] = loaded
             params['loading_status'] = 'done' if loaded else 'loading-data'
