@@ -4,7 +4,10 @@ from datapackage_pipelines.utilities.resources import PROP_STREAMING
 
 def collect_years(rows, year_field, collected_years):
     for row in rows:
-        collected_years.add(row[year_field])
+        try:
+          collected_years.add(int(row[year_field]))
+        except:
+          pass
         yield row
 
 
