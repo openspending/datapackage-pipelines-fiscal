@@ -3,3 +3,7 @@ data/
 .dpp.db
 denormalized/
 normalized/
+final/
+.dpp/
+*final.zip
+

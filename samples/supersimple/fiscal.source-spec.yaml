@@ -1,0 +1,28 @@
+title: "superSimple"
+dataset-name: super-simple
+resource-name: ssimple
+owner-id: 667df60aa07c34260eae9b55b2778712
+
+sources:
+- url: budget.csv
+
+fields:
+- header: year
+  options: {}
+  osType: date:fiscal-year
+
+# Economic Classification
+- header: econ-cls
+  options: {}
+  osType: economic-classification:generic:code
+
+# Administrative Classification
+- header: admin-cls
+  options: {}
+  osType: administrative-classification:generic:code
+
+# Measures
+- header: amount
+  options: {}
+  osType: value
+
