@@ -10,6 +10,7 @@ ES_ADDRESS = os.environ.get('ELASTICSEARCH_ADDRESS')
 def modify_datapackage(dp, parameters, *_):
     dataset_id = parameters['dataset-id']
     loaded = parameters.get('loaded')
+    private = parameters.get('private')
     datapackage_url = parameters.get('datapackage-url')
     if ES_ADDRESS:
         registry = PackageRegistry(ES_ADDRESS)
@@ -19,6 +20,8 @@ def modify_datapackage(dp, parameters, *_):
             model = datapackage['babbageModel']
             del datapackage['babbageModel']
             params['model'] = model
+        if private is not None:
+            datapackage['private'] = private
         if datapackage_url:
             params['datapackage_url'] = datapackage_url
             params['datapackage'] = datapackage
