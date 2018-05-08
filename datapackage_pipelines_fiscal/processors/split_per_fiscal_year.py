@@ -32,7 +32,7 @@ def process_resources(res_iter, fields, router):
 if __name__ == '__main__':
     parameters, datapackage, res_iter = ingest()
 
-    denormalized_pkg = Package(get_dependency_datapackage_url('./denormalized_flow'))
+    denormalized_pkg = Package(get_dependency_datapackage_url(parameters['source-pipeline'][13:]))
     denormalized = denormalized_pkg.resources[0]
     fiscal_years = list(filter(lambda r:r.name == 'fiscal-years', denormalized_pkg.resources))
 

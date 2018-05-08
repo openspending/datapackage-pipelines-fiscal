@@ -27,7 +27,10 @@ def finalize_datapackage_flow(source):
                              }
                          ),
                          (
-                             'fiscal.split_per_fiscal_year'
+                             'fiscal.split_per_fiscal_year',
+                             {
+                                 'source-pipeline': 'dependency://./denormalized_flow'
+                             }
                          ),
                          (
                              'dump.to_path',
