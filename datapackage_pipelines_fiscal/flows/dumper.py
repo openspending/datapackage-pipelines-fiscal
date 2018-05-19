@@ -3,7 +3,7 @@ from datapackage_pipelines.generators import slugify
 from .utils import extract_names, extract_storage_ids
 
 
-def dumper_flow(source):
+def dumper_flow(source, base):
 
     _, _, resource_name = extract_names(source)
     dataset_id, db_table, _ = extract_storage_ids(source)
@@ -19,7 +19,7 @@ def dumper_flow(source):
     ]
 
     deps = [
-        './dimension_flow_{}'.format(res)
+        'dimension_flow_{}'.format(res)
         for res in resources
         ]
 
@@ -27,7 +27,7 @@ def dumper_flow(source):
         res_db_table = '{}_{}'.format(db_table, i)
         steps = [
             ('load_resource', {
-                'url': 'dependency://'+dep,
+                'url': 'dependency://' + base + '/' + dep,
                 'resource': resource
             }),
             ('set_types',),
@@ -44,7 +44,7 @@ def dumper_flow(source):
 
     steps = [
         ('load_resource', {
-            'url': 'dependency://./normalized_flow',
+            'url': 'dependency://' + base + '/normalized_flow',
             'resource': resource_name
         }),
         ('fiscal.helpers.fix_null_pks',),
@@ -56,11 +56,11 @@ def dumper_flow(source):
             }
         })
     ]
-    yield steps, ['./normalized_flow'], ''
+    yield steps, ['normalized_flow'], ''
 
     yield [
         ('fiscal.update_model_in_registry', {
             'dataset-id': dataset_id,
             'loaded': True
         }),
-    ], ['./dumper_flow'], 'update_status'
+    ], ['dumper_flow'], 'update_status'

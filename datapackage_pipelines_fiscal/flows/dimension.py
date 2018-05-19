@@ -1,7 +1,7 @@
 from datapackage_pipelines.generators import slugify
 from .utils import extract_names
 
-def dimension_flow(source):
+def dimension_flow(source, base):
 
     title, dataset_name, resource_name = extract_names(source)
 
@@ -28,7 +28,7 @@ def dimension_flow(source):
         ]
         steps = [
             ('load_resource', {
-                'url': 'dependency://./denormalized_flow',
+                'url': 'dependency://' + base + '/denormalized_flow',
                 'resource': resource_name
             }),
             ('concatenate', {
@@ -62,4 +62,4 @@ def dimension_flow(source):
                 'out-path': 'normalized/'+resource
             })
         ]
-        yield steps, ['./denormalized_flow'], resource
+        yield steps, ['denormalized_flow'], resource

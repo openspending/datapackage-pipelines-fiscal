@@ -7,7 +7,7 @@ BUCKET = os.environ.get('S3_BUCKET_NAME')
 logging.info('DUMPING results to BUCKET %s', BUCKET)
 
 
-def finalize_datapackage_flow(source):
+def finalize_datapackage_flow(source, base):
 
     _, _, resource_name = extract_names(source)
     dataset_id, _, dataset_path = extract_storage_ids(source)
@@ -16,20 +16,20 @@ def finalize_datapackage_flow(source):
                          (
                              'load_metadata',
                              {
-                                 'url': 'dependency://./denormalized_flow',
+                                 'url': 'dependency://' + base + '/denormalized_flow',
                              }
                          ),
                          (
                              'load_resource',
                              {
-                                 'url': 'dependency://./denormalized_flow',
+                                 'url': 'dependency://' + base + '/denormalized_flow',
                                  'resource': resource_name
                              }
                          ),
                          (
                              'fiscal.split_per_fiscal_year',
                              {
-                                 'source-pipeline': 'dependency://./denormalized_flow'
+                                 'source-pipeline': 'dependency://' + base + '/denormalized_flow'
                              }
                          ),
                          (
@@ -40,19 +40,19 @@ def finalize_datapackage_flow(source):
                          )
                      ]
 
-    yield pipeline_steps, ['./denormalized_flow'], 'splitter'
+    yield pipeline_steps, ['denormalized_flow'], 'splitter'
 
     pipeline_steps = [
                         (
                             'load_metadata',
                             {
-                                'url': 'dependency://./finalize_datapackage_flow_splitter',
+                                'url': 'dependency://' + base + '/finalize_datapackage_flow_splitter',
                             }
                         ),
                         (
                             'load_resource',
                             {
-                                'url': 'dependency://./finalize_datapackage_flow_splitter',
+                                'url': 'dependency://' + base + '/finalize_datapackage_flow_splitter',
                                 'resource': '.+'
                             }
                         )
@@ -88,4 +88,4 @@ def finalize_datapackage_flow(source):
             }),
         ])
 
-    yield pipeline_steps, ['./finalize_datapackage_flow_splitter'], ''
+    yield pipeline_steps, ['finalize_datapackage_flow_splitter'], ''

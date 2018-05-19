@@ -28,18 +28,18 @@ class Generator(GeneratorBase):
         return json.load(open(SCHEMA_FILE))
 
     @classmethod
-    def generate_pipeline(cls, source):
+    def generate_pipeline(cls, source, base):
 
         for flow in FLOWS:
-            for pipeline_steps, deps, suffix in flow(source):
-                pipline_id = flow.__name__
+            for pipeline_steps, deps, suffix in flow(source, base):
+                pipline_id = base + '/' + flow.__name__
                 if suffix:
                     pipline_id += '_' + suffix
                 pipeline_details = {
                     'pipeline': steps(*pipeline_steps),
                     'dependencies': [
                         dict(
-                            pipeline=dep
+                            pipeline = base + '/' + dep
                         )
                         for dep in deps
                     ]

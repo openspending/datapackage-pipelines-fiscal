@@ -5,7 +5,7 @@ from .utils import extract_names, extract_storage_ids
 from datapackage_pipelines.generators import slugify
 
 
-def denormalized_flow(source):
+def denormalized_flow(source, base):
 
     title, dataset_name, resource_name = extract_names(source)
     dataset_id, _, _ = extract_storage_ids(source)
