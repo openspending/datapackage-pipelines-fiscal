@@ -140,6 +140,7 @@ def denormalized_flow(source, base):
                              {
                                  'title': title,
                                  'name': dataset_name,
+                                 'revision': source.get('revision', 0),
                              }
                          ),
                          ('fiscal.update_model_in_registry', {
