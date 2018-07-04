@@ -63,7 +63,7 @@ def finalize_datapackage_flow(source, base):
             (
                 'aws.dump.to_s3',
                 {
-                    'bucket': BUCKET,
+                    'bucket': BUCKET.split('/')[-1],
                     'path': '{}/final'.format(dataset_path),
                     'pretty-descriptor': True
                 }
