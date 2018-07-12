@@ -1,12 +1,13 @@
 from datapackage_pipelines.generators import slugify
 from .utils import extract_names
 
+
 def dimension_flow(source, base):
 
     title, dataset_name, resource_name = extract_names(source)
 
     kinds = sorted(set(
-        f['osType'].split(':')[0]
+        f['columnType'].split(':')[0]
         for f in source['fields']
     ) - {'value'})
 
@@ -24,7 +25,7 @@ def dimension_flow(source, base):
         headers = [
             f['header']
             for f in source['fields']
-            if f['osType'].startswith(kind+':') or f['osType'] == kind
+            if f['columnType'].startswith(kind+':') or f['columnType'] == kind
         ]
         steps = [
             ('load_resource', {

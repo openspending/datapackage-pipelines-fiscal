@@ -3,20 +3,24 @@ import collections
 import os
 
 from datapackage import DataPackage as Package
-from datapackage_pipelines.wrapper import ingest, spew, get_dependency_datapackage_url
+from datapackage_pipelines.wrapper import (
+    ingest,
+    spew,
+    get_dependency_datapackage_url)
 from datapackage_pipelines.lib.dump.file_formats import CSVFormat
 from datapackage_pipelines.utilities.resources import PROP_STREAMING
 
+
 def split_to_years(res, fields, router):
     fiscal_year_field = [k for k, v in fields.items()
-                         if v['osType'] == 'date:fiscal-year'
-                        ][0]
+                         if v['columnType'] == 'date:fiscal-year'
+                         ][0]
     csv_format = CSVFormat()
     for row in res:
         val = row[fiscal_year_field]
         writer = router.get(val)
         if writer is not None:
-          csv_format.write_row(writer, row, fields)
+            csv_format.write_row(writer, row, fields)
         yield row
     for writer in router.values():
         csv_format.finalize_file(writer)
@@ -32,9 +36,11 @@ def process_resources(res_iter, fields, router):
 if __name__ == '__main__':
     parameters, datapackage, res_iter = ingest()
 
-    denormalized_pkg = Package(get_dependency_datapackage_url(parameters['source-pipeline'][13:]))
+    denormalized_pkg = Package(get_dependency_datapackage_url(
+        parameters['source-pipeline'][13:]))
     denormalized = denormalized_pkg.resources[0]
-    fiscal_years = list(filter(lambda r:r.name == 'fiscal-years', denormalized_pkg.resources))
+    fiscal_years = list(filter(lambda r: r.name == 'fiscal-years',
+                               denormalized_pkg.resources))
 
     if len(fiscal_years) == 0:
         spew(
@@ -43,7 +49,7 @@ if __name__ == '__main__':
         )
     else:
         fiscal_years = fiscal_years[0]
-        fiscal_years = list(map(lambda x:x[0], fiscal_years.iter()))
+        fiscal_years = list(map(lambda x: x[0], fiscal_years.iter()))
         name_prefix = denormalized.name
         datapackage['resources'] = datapackage['resources'][:1]
         fields = denormalized.descriptor['schema']['fields']
@@ -61,5 +67,5 @@ if __name__ == '__main__':
             os.makedirs(os.path.dirname(out_filename), exist_ok=True)
             out_file = open(out_filename, 'w')
             router[year] = CSVFormat().initialize_file(out_file, headers)
-        
+
         spew(datapackage, process_resources(res_iter, fields, router))

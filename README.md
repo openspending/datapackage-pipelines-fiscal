@@ -53,7 +53,7 @@ Contains a non-empty list of fields for the fiscal data package.
 Each field definition has these properties:
 - `header`: The `name` of the field in the resulting resource
 - `title` [OPTIONAL]: The display name of the field in the resulting resource
-- `osType`: The _ColumnType_ of the field 
+- `columnType`: The _ColumnType_ of the field
 - `options`: Extra options to be added to the field, e.g. json-table-schema properties such as `decimalChar` etc.
 
 #### `measures` [OPTIONAL]

@@ -28,7 +28,7 @@ def denormalized_flow(source, base):
             if 'options' in f
         ),
         'os-types': dict(
-            (f['header'], f['osType'])
+            (f['header'], f['columnType'])
             for f in source['fields']
         ),
         'titles': dict(
@@ -62,7 +62,7 @@ def denormalized_flow(source, base):
                 date_measure = [
                     f['header']
                     for f in source['fields']
-                    if f.get('osType', '').startswith('date:')
+                    if f.get('columnType', '').startswith('date:')
                     ][0]
             currencies = measures.get('currencies', ['USD'])
             normalise_currencies = ('fiscal.normalise_currencies', {
@@ -95,7 +95,7 @@ def denormalized_flow(source, base):
                      )
                      )
                     for f in source['fields']
-                    if f['osType'] == 'value'
+                    if f['columnType'] == 'value'
                 )
             }
         ))
@@ -107,7 +107,7 @@ def denormalized_flow(source, base):
                     'key': [
                         f['header']
                         for f in source['fields']
-                        if f['osType'] != 'value'
+                        if f['columnType'] != 'value'
                         ],
                     'delete': True
                 },
@@ -119,7 +119,7 @@ def denormalized_flow(source, base):
                     (f['header'],
                      {
                          'name': f['header'],
-                         'aggregate': 'any' if f['osType'] != 'value' else 'sum'
+                         'aggregate': 'any' if f['columnType'] != 'value' else 'sum'  # noqa
                      })
                     for f in source['fields']
                 )

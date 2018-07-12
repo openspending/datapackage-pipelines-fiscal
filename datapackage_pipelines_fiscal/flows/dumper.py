@@ -9,7 +9,7 @@ def dumper_flow(source, base):
     dataset_id, db_table, _ = extract_storage_ids(source)
 
     kinds = sorted(set(
-        f['osType'].split(':')[0]
+        f['columnType'].split(':')[0]
         for f in source['fields']
     ) - {'value'})
 
@@ -23,7 +23,8 @@ def dumper_flow(source, base):
         for res in resources
         ]
 
-    for i, resource, dep, kind in zip(range(len(kinds)), resources, deps, kinds):
+    for i, resource, dep, kind in zip(range(len(kinds)), resources, deps,
+                                      kinds):
         res_db_table = '{}_{}'.format(db_table, i)
         steps = [
             ('load_resource', {
