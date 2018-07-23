@@ -43,7 +43,7 @@
               "type": "string"
             }
           },
-          "osType": {
+          "columnType": {
             "type": "string"
           },
           "options": {

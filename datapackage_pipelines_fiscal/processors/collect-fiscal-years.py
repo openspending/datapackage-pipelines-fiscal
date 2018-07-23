@@ -5,9 +5,9 @@ from datapackage_pipelines.utilities.resources import PROP_STREAMING
 def collect_years(rows, year_field, collected_years):
     for row in rows:
         try:
-          collected_years.add(int(row[year_field]))
+            collected_years.add(int(row[year_field]))
         except:
-          pass
+            pass
         yield row
 
 
@@ -26,14 +26,14 @@ if __name__ == '__main__':
     params, dp, res_iter = ingest()
 
     year_fields = list(filter(
-        lambda f: f['osType'] == 'date:fiscal-year',
+        lambda f: f['columnType'] == 'date:fiscal-year',
         dp['resources'][0]['schema']['fields']
     ))
     if len(year_fields) == 1:
         year_field = year_fields[0]['name']
         dp['resources'].append(dict(
             name='fiscal-years',
-            path='data/fiscal-years.csv',            
+            path='data/fiscal-years.csv',
             schema=dict(
                 fields=[
                     dict(name='year', type='integer')

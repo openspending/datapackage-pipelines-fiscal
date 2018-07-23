@@ -9,20 +9,20 @@ sources:
 fields:
 - header: year
   options: {}
-  osType: date:fiscal-year
+  columnType: date:fiscal-year
 
 # Economic Classification
 - header: econ-cls
   options: {}
-  osType: economic-classification:generic:code
+  columnType: economic-classification:generic:code
 
 # Administrative Classification
 - header: admin-cls
   options: {}
-  osType: administrative-classification:generic:code
+  columnType: administrative-classification:generic:code
 
 # Measures
 - header: amount
   options: {}
-  osType: value
+  columnType: value
 

@@ -6,12 +6,12 @@ sources:
 
 fields:
 - header: id
-  osType: budget-line-id
+  columnType: budget-line-id
 
 - header: year
-  osType: date:fiscal-year
+  columnType: date:fiscal-year
 
 - header: amount
   options:
     groupChar: ","
-  osType: value
+  columnType: value

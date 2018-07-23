@@ -40,7 +40,7 @@ fields:
   aliases:
   - Ciclo
   options: {}
-  osType: date:fiscal-year
+  columnType: date:fiscal-year
 
 # Functional Classification
 - header: GPO_FUNCIONAL
@@ -50,28 +50,28 @@ fields:
   - Finalidad
   - GF
   options: {}
-  osType: functional-classification:generic:level1:code
+  columnType: functional-classification:generic:level1:code
 - header: DESC_GPO_FUNCIONAL
   aliases:
   - GRUPO_FUN_DESCRIPCION
   - "Descripci\xF3n de Grupo Funcional"
   - "Descripci\xF3n de Finalidad"
   options: {}
-  osType: functional-classification:generic:level1:label
+  columnType: functional-classification:generic:level1:label
 
 - header: ID_FUNCION
-  title: Función 
+  title: Función
   aliases:
   - "Funci\xF3n"
   - FN
   options: {}
-  osType: functional-classification:generic:level2:code:full
+  columnType: functional-classification:generic:level2:code:full
 - aliases:
   - "Descripci\xF3n de Funci\xF3n"
   - FUNCIONL_DESCRIPCION
   header: DESC_FUNCION
   options: {}
-  osType: functional-classification:generic:level2:label
+  columnType: functional-classification:generic:level2:label
 
 - header: ID_SUBFUNCION
   title: Subfunción
@@ -79,13 +79,13 @@ fields:
   - "Subfunci\xF3n"
   - SF
   options: {}
-  osType: functional-classification:generic:level3:code:full
+  columnType: functional-classification:generic:level3:code:full
 - header: DESC_SUBFUNCION
   aliases:
   - "Descripci\xF3n de Subfunci\xF3n"
   - SUBFUNCIONL_DESCRIPCION
   options: {}
-  osType: functional-classification:generic:level3:label
+  columnType: functional-classification:generic:level3:label
 
 - header: ID_AI
   title: Actividad Institucional
@@ -93,14 +93,14 @@ fields:
   - Actividad Institucional
   - AI
   options: {}
-  osType: functional-classification:generic:level4:code:full
+  columnType: functional-classification:generic:level4:code:full
 - header: DESC_AI
   aliases:
   - "Descripci\xF3n de la Actividad Institucional"
   - ACTIVIDAD_INST_DESCRIPCION
   - "Descripci\xF3n de Actividad Institucional"
   options: {}
-  osType: functional-classification:generic:level4:label
+  columnType: functional-classification:generic:level4:label
 
 # Economic Classification
 - header: ID_CAPITULO
@@ -109,13 +109,13 @@ fields:
   - Capitulo
   - "Capítulo"
   options: {}
-  osType: economic-classification:generic:level1:code
+  columnType: economic-classification:generic:level1:code
 - header: DESC_CAPITULO
   aliases:
   - "Descripci\xF3n de Capitulo"
   - "Descripción de Capítulo"
   options: {}
-  osType: economic-classification:generic:level1:label
+  columnType: economic-classification:generic:level1:label
 
 - header: ID_CONCEPTO
   title: Concepto
@@ -124,7 +124,7 @@ fields:
   - Objeto del Gasto
   - Concepto
   options: {}
-  osType: economic-classification:generic:level2:code:full
+  columnType: economic-classification:generic:level2:code:full
 - header: DESC_CONCEPTO
   aliases:
   - DESC_OBJETO_DEL_GASTO
@@ -132,7 +132,7 @@ fields:
   - "Descripci\xF3n de Objeto del Gasto"
   - CONCEPTO_DESCRIPCION
   options: {}
-  osType: economic-classification:generic:level2:label
+  columnType: economic-classification:generic:level2:label
 
 - header: ID_PARTIDA_GENERICA
   title: Partida Genérica
@@ -140,13 +140,13 @@ fields:
   - PARTIDA_GENERICA
   - "Partida Gen\xE9rica"
   options: {}
-  osType: economic-classification:generic:level3:code:full
+  columnType: economic-classification:generic:level3:code:full
 
 - header: DESC_PARTIDA_GENERICA
   aliases:
   - "Descripci\xF3n de Partida Gen\xE9rica"
   options: {}
-  osType: economic-classification:generic:level3:label
+  columnType: economic-classification:generic:level3:label
 
 - header: ID_PARTIDA_ESPECIFICA
   title: Partida Específica
@@ -154,13 +154,13 @@ fields:
   - PARTIDA_ESPECIFICA
   - "Partida Espec\xEDfica"
   options: {}
-  osType: economic-classification:generic:level4:code:full
+  columnType: economic-classification:generic:level4:code:full
 - header: DESC_PARTIDA_ESPECIFICA
   aliases:
   - "Descripci\xF3n de Partida Espec\xEDfica"
   - "Descripcion de Partida Espec\xEDfica"
   options: {}
-  osType: economic-classification:generic:level4:label
+  columnType: economic-classification:generic:level4:label
 
 # Geo
 - header: ID_ENTIDAD_FEDERATIVA
@@ -170,7 +170,7 @@ fields:
   - Entidad Federativa
   - EF
   options: {}
-  osType: geo-source:target:code
+  columnType: geo-source:target:code
 - header: ENTIDAD_FEDERATIVA
   aliases:
   - DESC_ENT_FED
@@ -178,7 +178,7 @@ fields:
   - "Descripci\xF3n de la entidad federativa"
   - ENTIDAD_FED_DESCRIPCION
   options: {}
-  osType: geo-source:target:title
+  columnType: geo-source:target:title
 
 # Financial Source
 - header: ID_FF
@@ -188,13 +188,13 @@ fields:
   - FF
   - Fuente de Finaciamiento
   options: {}
-  osType: fin-source:generic:code
+  columnType: fin-source:generic:code
 - aliases:
   - "Descripci\xF3n de Fuente de Financiamiento"
   - FUENTE_FINAN_DESCRIPCION
   header: DESC_FF
   options: {}
-  osType: fin-source:generic:label
+  columnType: fin-source:generic:label
 
 # Activity
 - header: ID_MODALIDAD
@@ -205,7 +205,7 @@ fields:
   - Identificador de Programa Presupuestario
   - Identificador del Programa Presupuestario
   options: {}
-  osType: activity:generic:program:code
+  columnType: activity:generic:program:code
 - header: DESC_MODALIDAD
   aliases:
   - "Descripci\xF3n de la modalidad del programa presupuestario"
@@ -213,7 +213,7 @@ fields:
   - "Descripci\xF3n del Identificador del Programa Presupuestario"
   - MODALIDAD_DESCRIPCION
   options: {}
-  osType: activity:generic:program:label
+  columnType: activity:generic:program:label
 
 - header: ID_PP
   title: Programa Presupuestario
@@ -221,13 +221,13 @@ fields:
   - PP
   - Programa Presupuestario
   options: {}
-  osType: activity:generic:project:code:full
+  columnType: activity:generic:project:code:full
 - header: DESC_PP
   aliases:
   - "Descripci\xF3n de Programa Presupuestario"
   - PROGR_PRES_DESCRIPCION
   options: {}
-  osType: activity:generic:project:label
+  columnType: activity:generic:project:label
 
 # Administrative Classification
 - header: ID_RAMO
@@ -236,13 +236,13 @@ fields:
   - Ramo
   - RAMO
   options: {}
-  osType: administrative-classification:generic:level1:code
+  columnType: administrative-classification:generic:level1:code
 - header: DESC_RAMO
   aliases:
   - "Descripci\xF3n de Ramo"
   - RAMO_DESCRIPCION
   options: {}
-  osType: administrative-classification:generic:level1:label
+  columnType: administrative-classification:generic:level1:label
 
 - header: ID_UR
   title: Unidad Responsable
@@ -250,13 +250,13 @@ fields:
   - Unidad Responsable
   - UNIDAD
   options: {}
-  osType: administrative-classification:generic:level2:code:full
+  columnType: administrative-classification:generic:level2:code:full
 - header: DESC_UR
   aliases:
   - "Descripci\xF3n de Unidad Responsable"
   - UNIDAD_DESCRIPCION
   options: {}
-  osType: administrative-classification:generic:level2:label
+  columnType: administrative-classification:generic:level2:label
 
 # Expenditure Type
 - header: ID_TIPOGASTO
@@ -265,13 +265,13 @@ fields:
   - TG
   - Tipo de Gasto
   options: {}
-  osType: expenditure-type:code
+  columnType: expenditure-type:code
 - header: DESC_TIPOGASTO
   aliases:
   - "Descripci\xF3n de Tipo de Gasto"
   - TIPO_GASTO_DESCRIPCION
   options: {}
-  osType: expenditure-type:label
+  columnType: expenditure-type:label
 
 # Budget Line Id
 - header: ID_CLAVE_CARTERA
@@ -281,7 +281,7 @@ fields:
   - CLAVE_CARTERA
   title: Clave de Cartera
   options: {}
-  osType: budget-line-id
+  columnType: budget-line-id
 
 # Measures
 - header: MONTO_ADEFAS
@@ -291,7 +291,7 @@ fields:
   title: ADEFAS
   options:
     currency: MXN
-  osType: value
+  columnType: value
 - header: MONTO_APROBADO
   aliases:
   - Aprobado
@@ -302,42 +302,42 @@ fields:
   title: Aprobado
   options:
     currency: MXN
-  osType: value
+  columnType: value
 - header: MONTO_DEVENGADO
   aliases:
   - Devengado
   title: Devengado
   options:
     currency: MXN
-  osType: value
+  columnType: value
 - header: MONTO_EJERCICIO
   aliases:
   - Ejercicio
   title: Ejercicio
   options:
     currency: MXN
-  osType: value
+  columnType: value
 - header: MONTO_EJERCIDO
   aliases:
   - Ejercido
   title: Ejercido
   options:
     currency: MXN
-  osType: value
+  columnType: value
 - header: MONTO_MODIFICADO
   aliases:
   - Modificado
   title: Modificado
   options:
     currency: MXN
-  osType: value
+  columnType: value
 - header: MONTO_PAGADO
   aliases:
   - Pagado
   title: Pagado
   options:
     currency: MXN
-  osType: value
+  columnType: value
 
 deduplicate: yes
 
