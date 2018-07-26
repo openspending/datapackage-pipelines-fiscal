@@ -25,7 +25,7 @@ INSTALL_REQUIRES = [
     'datapackage-pipelines>=1.5.0',
     'datapackage-pipelines-aws',
     'datapackage>=1.0.2',
-    'os-package-registry>=0.0.13',
+    'os-package-registry>=0.0.15'
 ]
 TESTS_REQUIRES = [
     'tox',
@@ -45,6 +45,7 @@ setup(
     extras_require={'develop': TESTS_REQUIRES},
     zip_safe=False,
     long_description=README,
+    long_description_content_type="text/markdown",
     description='{{ DESCRIPTION }}',
     author='Open Knowledge International',
     author_email='info@okfn.org',
