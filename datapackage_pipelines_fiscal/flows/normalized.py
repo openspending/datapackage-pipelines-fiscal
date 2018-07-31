@@ -82,7 +82,7 @@ def normalized_flow(source, base):
         ('add_metadata', {
             'savedPk': [resource + '_id' for resource in resources]
         }),
-        ('fiscal.helpers.load_primarykey', {}, True),
+        ('fiscal.helpers.load_primarykey', {}),
         ('fiscal.update_model_in_registry', {
             'dataset-id': dataset_id,
             'loaded': False

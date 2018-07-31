@@ -151,7 +151,7 @@ def denormalized_flow(source, base):
                          ('add_resource', source)
                          for source in source['sources']
                          ] + [
-                         ('stream_remote_resources', {}, True),
+                         ('stream_remote_resources', {}),
                          ('concatenate', {
                              'target': {
                                  'name': resource_name
