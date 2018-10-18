@@ -13,50 +13,50 @@ def finalize_datapackage_flow(source, base):
     dataset_id, _, dataset_path = extract_storage_ids(source)
 
     pipeline_steps = [
-                         (
-                             'load_metadata',
-                             {
-                                 'url': 'dependency://' + base + '/denormalized_flow',
-                             }
-                         ),
-                         (
-                             'load_resource',
-                             {
-                                 'url': 'dependency://' + base + '/denormalized_flow',
-                                 'resource': resource_name
-                             }
-                         ),
-                         (
-                             'fiscal.split_per_fiscal_year',
-                             {
-                                 'source-pipeline': 'dependency://' + base + '/denormalized_flow'
-                             }
-                         ),
-                         (
-                             'dump.to_path',
-                             {
-                                 'out-path': 'final'
-                             }
-                         )
-                     ]
+        (
+            'load_metadata',
+            {
+                'url': 'dependency://' + base + '/denormalized_flow',
+            }
+        ),
+        (
+            'load_resource',
+            {
+                'url': 'dependency://' + base + '/denormalized_flow',
+                'resource': resource_name
+            }
+        ),
+        (
+            'fiscal.split_per_fiscal_year',
+            {
+                'source-pipeline': 'dependency://' + base + '/denormalized_flow'
+            }
+        ),
+        (
+            'dump.to_path',
+            {
+                'out-path': 'final'
+            }
+        )
+     ]
 
     yield pipeline_steps, ['denormalized_flow'], 'splitter'
 
     pipeline_steps = [
-                        (
-                            'load_metadata',
-                            {
-                                'url': 'dependency://' + base + '/finalize_datapackage_flow_splitter',
-                            }
-                        ),
-                        (
-                            'load_resource',
-                            {
-                                'url': 'dependency://' + base + '/finalize_datapackage_flow_splitter',
-                                'resource': '.+'
-                            }
-                        )
-                    ]
+        (
+            'load_metadata',
+            {
+                'url': 'dependency://' + base + '/finalize_datapackage_flow_splitter',
+            }
+        ),
+        (
+            'load_resource',
+            {
+                'url': 'dependency://' + base + '/finalize_datapackage_flow_splitter',
+                'resource': '.+'
+            }
+        )
+    ]
 
     if BUCKET is not None:
         pipeline_steps.extend([
@@ -84,7 +84,9 @@ def finalize_datapackage_flow(source, base):
             ('fiscal.update_model_in_registry', {
                 'private': source.get('private') is not False,
                 'dataset-id': dataset_id,
-                'datapackage-url': 'http://{}/{}/final/datapackage.json'.format(BUCKET, dataset_path)
+                'datapackage-url':
+                    'http://{}/{}/final/datapackage.json'.format(BUCKET,
+                                                                 dataset_path)
             }),
         ])
 

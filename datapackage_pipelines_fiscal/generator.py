@@ -1,8 +1,7 @@
 import os
 import json
 
-from datapackage_pipelines.generators import \
-    GeneratorBase, slugify, steps
+from datapackage_pipelines.generators import GeneratorBase, steps
 
 from .flows.denormalized import denormalized_flow
 from .flows.dumper import dumper_flow
@@ -21,6 +20,7 @@ FLOWS = [
     finalize_datapackage_flow,
 ]
 
+
 class Generator(GeneratorBase):
 
     @classmethod
@@ -38,9 +38,7 @@ class Generator(GeneratorBase):
                 pipeline_details = {
                     'pipeline': steps(*pipeline_steps),
                     'dependencies': [
-                        dict(
-                            pipeline = base + '/' + dep
-                        )
+                        dict(pipeline=base + '/' + dep)
                         for dep in deps
                     ]
                 }

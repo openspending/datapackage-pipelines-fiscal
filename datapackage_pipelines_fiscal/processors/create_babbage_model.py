@@ -3,10 +3,12 @@ from datapackage_pipelines.generators import slugify
 
 from datapackage_pipelines_fiscal.processors.consts import ID_COLUMN_NAME
 
+
 def modify_datapackage(dp, parameters, *_):
     db_tables = parameters['db-tables']
     model = dp['model']
-    field_types = dict((x['slug'], x['type']) for x in dp['resources'][-1]['schema']['fields'])
+    field_types = dict((x['slug'], x['type'])
+                       for x in dp['resources'][-1]['schema']['fields'])
 
     bbg_hierarchies = {}
     bbg_dimensions = {}
@@ -29,7 +31,7 @@ def modify_datapackage(dp, parameters, *_):
 
         # Separate to codes and labels
         codes = dict(filter(lambda x: 'labelfor' not in x[1], attributes))
-        labels = dict(map(lambda y: (y[1]['labelfor'], y[1]), 
+        labels = dict(map(lambda y: (y[1]['labelfor'], y[1]),
                           filter(lambda x: 'labelfor' in x[1], attributes)))
 
         # For each code, create a babbage dimension
@@ -56,7 +58,8 @@ def modify_datapackage(dp, parameters, *_):
                 attribute = label
                 bbg_attributes.update({
                     fieldname: dict(
-                        column='.'.join([db_tables[hierarchy_name], fieldname]),
+                        column='.'.join([db_tables[hierarchy_name],
+                                        fieldname]),
                         label=attribute.get('title', attribute['source']),
                         type=field_types[fieldname]
                     )
@@ -75,10 +78,10 @@ def modify_datapackage(dp, parameters, *_):
         )
 
     dp['babbageModel'] = dict(
-        fact_table = db_tables[''],
-        dimensions = bbg_dimensions,
-        hierarchies = bbg_hierarchies,
-        measures = bbg_measures
+        fact_table=db_tables[''],
+        dimensions=bbg_dimensions,
+        hierarchies=bbg_hierarchies,
+        measures=bbg_measures
     )
 
     return dp
