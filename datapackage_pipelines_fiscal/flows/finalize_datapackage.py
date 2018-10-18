@@ -83,6 +83,7 @@ def finalize_datapackage_flow(source, base):
     pipeline_steps.extend([
             ('fiscal.update_model_in_registry', {
                 'private': source.get('private') is not False,
+                'owner': source.get('owner-id'),
                 'dataset-id': dataset_id,
                 'datapackage-url':
                     'http://{}/{}/final/datapackage.json'.format(BUCKET,
