@@ -80,5 +80,5 @@ target/
 # Extras
 .projectile
 .idea/
-datapackage-pipelines.iml
+*.iml
 celerybeat-schedule
