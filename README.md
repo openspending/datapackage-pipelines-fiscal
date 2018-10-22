@@ -113,6 +113,10 @@ If `true`, then the source data will be processed to remove duplicate rows (i.e.
 A list of extra processors (and parameters) that will be applied to the data.
 Format is as in any `pipeline-spec.yaml`
 
+#### `suppress-os` [OPTIONAL, default is `False`]
+
+If `False`, an OpenSpending compatible datapackage is created on the datastore. This basic datapackage ensures a basic FDP is available for editing with OpenSpending. Packages created with `os-conductor` already create this artefact, so would use `suppress-os: True`, to prevent another being created unnecessarily.
+
 ## Generated Pipelines
 
 #### ./denormalized_flow
