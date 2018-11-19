@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   "type": "object",
   "properties": {
     "title": {
@@ -17,8 +17,7 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "encoding": {
             "type": "string"
