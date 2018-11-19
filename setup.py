@@ -22,7 +22,7 @@ PACKAGE = 'datapackage_pipelines_fiscal'
 NAME = PACKAGE.replace('_', '-')
 INSTALL_REQUIRES = [
     'six>=1.9',
-    'datapackage-pipelines>=1.5.0,<2.0.0',
+    'datapackage-pipelines>=2.0.0,<3',
     'datapackage-pipelines-aws',
     'datapackage>=1.0.2',
     'os-package-registry==0.0.17'
