@@ -10,7 +10,7 @@ Extension for datapackage-pipelines used for loading Fiscal Data Packages into:
 
 This extension works with a custom source spec and a set of processors. The generator will convert the source spec into a set of inter-dependent pipelines, which when run in order will perform data processing and loading to selected endpoints (based on environment variables).
 
-## fiscal.source-spec.yaml 
+## fiscal.source-spec.yaml
 
 Each source-spec contains information regarding a single Fiscal Data Package.
 
@@ -30,7 +30,7 @@ A slug to be used as the main resource's name in the final data package.
 
 If not provided, the dataset name will be used.
 
-#### `owner-id` 
+#### `owner-id`
 
 The id of the owner of this datapackage.
 
@@ -41,7 +41,7 @@ This identifier is used to generate various paths and storage names.
 Contains a non-empty list of data sources for the fiscal data package.
 
 Each data source has these properties:
-- `url`: The location of the data 
+- `url`: The location of the data
 - `name`: [OPTIONAL] A name for this source (will later be used as an intermediate resource name)
 
 Other `tabulator` parameters can also be added as properties here, e.g. `sheet`, `encoding`, `compression` etc.
@@ -180,7 +180,7 @@ _(depends on corresponding `./dimension_flow_{hierarchy}`)_
 - Fixes nulls in primary key (replacing them with empty strings)
 
 Outputs
-- Saves data as a single table in an SQL database  
+- Saves data as a single table in an SQL database
 
 #### ./dumper_flow
 _(depends on `./normalized_flow`)_
@@ -189,14 +189,14 @@ _(depends on `./normalized_flow`)_
 - Fixes nulls in primary key (replacing them with empty strings)
 
 Outputs
-- Saves data as a single table in an SQL database  
+- Saves data as a single table in an SQL database
 
 #### ./dumper_flow_update_status
 _(depends on `./dumper_flow`)_
 
 Outputs
-- Updates os package registry (if configured) that the package was loaded successfully  
-        
+- Updates os package registry (if configured) that the package was loaded successfully
+
 ## Environment variables
 
 `DPP_DB_ENGINE` - connection string for an SQL database to dump data into
