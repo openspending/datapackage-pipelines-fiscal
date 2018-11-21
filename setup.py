@@ -46,7 +46,7 @@ setup(
     zip_safe=False,
     long_description=README,
     long_description_content_type="text/markdown",
-    description='{{ DESCRIPTION }}',
+    description='Fiscal Data Package extensions for Datapackage Pipelines',
     author='Open Knowledge International',
     author_email='info@okfn.org',
     url='https://github.com/openspending/datapackage-pipelines-fiscal',
