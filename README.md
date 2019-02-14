@@ -117,6 +117,11 @@ Format is as in any `pipeline-spec.yaml`
 
 If `False`, an OpenSpending compatible datapackage is created on the datastore. This basic datapackage ensures a basic FDP is available for editing with OpenSpending. Packages created with `os-conductor` already create this artefact, so would use `suppress-os: True`, to prevent another being created unnecessarily.
 
+#### `keep-artifacts` [OPTIONAL, default is `False`]
+
+By default, pipeline artifacts (temporary directories and files creating during pipeline execution) will be removed after all pipelines have successfully been run. To keep the artifact, set this option to `True`.
+
+
 ## Generated Pipelines
 
 #### ./denormalized_flow
