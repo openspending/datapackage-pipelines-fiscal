@@ -1,14 +1,37 @@
 # datapackage-pipelines-fiscal
 
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/datapackage-pipelines-fiscal.svg)](https://pypi.org/project/datapackage-pipelines-fiscal/)
 [![Travis](https://travis-ci.org/openspending/datapackage-pipelines-fiscal.svg?branch=master)](https://travis-ci.org/openspending/datapackage-pipelines-fiscal)
 
 Extension for datapackage-pipelines used for loading Fiscal Data Packages into:
 - S3 (or compatible) storage, in a denormalized form
 - a database in normalized form.
-- Metadata will be stored in an elasticsearch instance (if available), OpenSpending compatible
-- A `babbage` model will also be generated for querying the database using its API
+- Metadata will be stored in an elasticsearch instance (if available) via [os-package-registry](https://github.com/openspending/os-package-registry)
+- A `babbage` model will also be generated and written to the datapackage for querying the database using its API
 
 This extension works with a custom source spec and a set of processors. The generator will convert the source spec into a set of inter-dependent pipelines, which when run in order will perform data processing and loading to selected endpoints (based on environment variables).
+
+This extension is used by [os-conductor](https://github.com/openspending/os-conductor) and [os-data-importers](https://github.com/openspending/os-data-importers).
+
+## Environment variables
+
+`DPP_DB_ENGINE` - connection string for an SQL database to dump data into
+
+`ELASTICSEARCH_ADDRESS` [OPTIONAL] - connection string for an elasticsearch instance (used for package registry updating)
+
+`S3_BUCKET_NAME` [OPTIONAL] - S3 bucket for uploading data. If not provided, local ZIP files will be created instead.
+
+`AWS_ACCESS_KEY_ID` - S3 credentials (required if S3 bucket was specified)
+
+`AWS_SECRET_ACCESS_KEY` - S3 credentials (required if S3 bucket was specified)
+
+## Dependencies
+
+In order to fully run the fiscal datapackage flow you need to have `os-types` installed, using npm:
+
+`$ npm install -g os-types`
+
+This external node.js utility is used to perform fiscal modelling for the processed datapackage.
 
 ## fiscal.source-spec.yaml
 
@@ -201,26 +224,6 @@ _(depends on `./dumper_flow`)_
 
 Outputs
 - Updates os package registry (if configured) that the package was loaded successfully
-
-## Environment variables
-
-`DPP_DB_ENGINE` - connection string for an SQL database to dump data into
-
-`ELASTICSEARCH_ADDRESS` [OPTIONAL] - connection string for an elasticsearch instance (used for package registry updating)
-
-`S3_BUCKET_NAME` [OPTIONAL] - S3 bucket for uploading data. If not provided, local ZIP files will be created instead.
-
-`AWS_ACCESS_KEY_ID` - S3 credentials (required if S3 bucket was specified)
-
-`AWS_SECRET_ACCESS_KEY` - S3 credentials (required if S3 bucket was specified)
-
-## Dependencies
-
-In order to fully run the fiscal datapackage flow you need to have `os-types` installed, using npm:
-
-`$ npm install -g os-types`
-
-This external node.js utility is used to perform fiscal modelling for the processed datapackage.
 
 ## Contributing
 
