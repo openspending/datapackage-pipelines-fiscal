@@ -25,7 +25,7 @@ INSTALL_REQUIRES = [
     'datapackage-pipelines>=2.0.0,<3',
     'datapackage-pipelines-aws',
     'datapackage>=1.0.2',
-    'os-package-registry==0.0.18'
+    'os-package-registry>=0.0.19'
 ]
 TESTS_REQUIRES = [
     'tox',
