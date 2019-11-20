@@ -35,6 +35,8 @@ if output.startswith('FAILED'):
     raise RuntimeError(output)
 
 model = json.loads(output)
+if 'unknown' in model['model'].get('dimensions', {}):
+    model['model']['dimensions'].pop('unknown')
 
 datapackage['model'] = model['model']
 
